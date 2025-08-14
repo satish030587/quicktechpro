@@ -1,83 +1,37 @@
-# QuickTechPro Website Deployment Guide
+# QuickTechPro Website - Hostinger Premium Hosting Deployment Guide
 
-## 🚀 Deployment Setup Instructions
+## 🏠 Hostinger Premium Hosting Setup
 
-### Prerequisites
-- Node.js 18+ installed on your server
-- PM2 for process management
-- Nginx for reverse proxy
-- SSL certificate for HTTPS
+**Important**: Hostinger Premium is shared hosting, not VPS. This means we need to deploy as static files, not a Node.js server.
 
-### Production Environment Variables
-Create a `.env.production` file on your server:
+### Hosting Environment
+- **Type**: Shared hosting (cPanel)
+- **Technology**: Static HTML/CSS/JS files
+- **No Node.js server**: Files served directly by Apache/Nginx
+- **Domain**: quicktechpro.in
 
+### Deployment Strategy
+Since Hostinger Premium doesn't support Node.js servers, we'll:
+1. Build the Next.js app as static files (`next export`)
+2. Upload static files via File Manager or FTP
+3. Use Git for version control and manual deployment
+
+## 📁 Static Export Configuration
+
+The project is configured to generate static HTML files that work on shared hosting:
+
+### Build Process
 ```bash
-NODE_ENV=production
-NEXT_TELEMETRY_DISABLED=1
-PORT=3000
-```
-
-### Server Setup Commands
-
-#### 1. Install Dependencies
-```bash
-npm install
+# Generate static files for hosting
 npm run build
+npm run export  # Creates 'out/' folder with static files
 ```
 
-#### 2. Start with PM2
-```bash
-npm install -g pm2
-pm2 start ecosystem.config.js
-pm2 save
-pm2 startup
-```
-
-#### 3. Nginx Configuration
-```nginx
-server {
-    listen 80;
-    listen [::]:80;
-    server_name quicktechpro.in www.quicktechpro.in;
-    return 301 https://$server_name$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-    server_name quicktechpro.in www.quicktechpro.in;
-
-    ssl_certificate /path/to/ssl/certificate.crt;
-    ssl_certificate_key /path/to/ssl/private.key;
-    
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
-
-## 🔄 Automated Deployment
-
-### Option 1: GitHub Actions (Recommended)
-1. Push code to GitHub private repository
-2. Set up GitHub Actions workflow
-3. Configure server secrets
-
-### Option 2: GitLab CI/CD
-1. Push code to GitLab private repository
-2. Set up CI/CD pipeline
-3. Configure deployment variables
-
-### Option 3: Manual Deployment Script
-Use the provided `deploy.sh` script for manual deployments.
+### What Gets Generated
+- HTML files for all pages
+- CSS and JavaScript bundles
+- Optimized images and assets
+- All files ready for upload to hosting
 
 ## 🛡️ Security Checklist
 - [ ] Environment variables secured

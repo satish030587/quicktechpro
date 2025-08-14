@@ -1,7 +1,9 @@
-# 🚀 QuickTechPro Website - Complete Deployment Guide
+# 🚀 QuickTechPro Website - Hostinger Premium Hosting Deployment
 
 ## Overview
-This guide will help you deploy your QuickTechPro website to your domain `quicktechpro.in` with automated deployment from a Git repository.
+This guide will help you deploy your QuickTechPro website to **Hostinger Premium Shared Hosting** with your domain `quicktechpro.in`.
+
+**Important**: Hostinger Premium is shared hosting (not VPS), so we deploy as static files rather than a Node.js server.
 
 ## 📋 Prerequisites
 
@@ -10,25 +12,54 @@ This guide will help you deploy your QuickTechPro website to your domain `quickt
 - [x] Node.js 18+ installed
 - [x] Website code ready (✅ Already completed)
 
-### On Your Server:
-- [ ] Ubuntu/CentOS server with root access
-- [ ] Domain `quicktechpro.in` pointing to your server IP
-- [ ] SSL certificate (Let's Encrypt recommended)
+### Your Hosting Setup:
+- [x] Hostinger Premium hosting account
+- [x] Domain `quicktechpro.in` (should be connected to Hostinger)
+- [x] Access to hPanel (Hostinger's control panel)
 
-## 🎯 Deployment Options
+## 🎯 Deployment Strategy
 
-### Option 1: GitHub Private Repository (Recommended)
-**Best for:** Automatic deployments, team collaboration, backup
-
-### Option 2: GitLab Private Repository
-**Best for:** If you prefer GitLab ecosystem
-
-### Option 3: Manual Deployment
-**Best for:** Simple setups, learning purposes
+Since Hostinger Premium is **shared hosting** (not VPS):
+- ✅ **Static Export**: Next.js builds to HTML/CSS/JS files
+- ✅ **File Upload**: Upload static files via File Manager or FTP
+- ✅ **No Server**: Files served directly by Apache/Nginx
+- ✅ **Fast & Secure**: Static files are fastest and most secure
 
 ---
 
-## 🚀 Step-by-Step Setup
+## 🚀 Quick Start (5 Minutes to Live!)
+
+### Step 1: Build Static Files
+```bash
+# Navigate to your project
+cd d:\quicktechpro
+
+# Build static website files
+npm run deploy
+```
+This creates an `out/` folder with all files ready for hosting.
+
+### Step 2: Update Contact Information (IMPORTANT!)
+Before uploading, replace placeholder contact info:
+- Phone: `+91-XXXX-XXXXXX` → Your real number
+- Email: `support@quicktechpro.com` → Your real email
+- Address: Update with your real address
+
+Then rebuild:
+```bash
+npm run deploy
+```
+
+### Step 3: Upload to Hostinger
+1. **Login to Hostinger** → Go to hPanel
+2. **Open File Manager** → Navigate to `public_html`
+3. **Delete existing files** (like default index.html)
+4. **Upload all files** from the `out/` folder
+5. **Your website is LIVE!** 🎉
+
+---
+
+## � Detailed Upload Methods
 
 ### Step 1: Create Private Git Repository
 

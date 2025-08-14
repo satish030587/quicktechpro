@@ -10,6 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://quicktechpro.in'),
   title: "QuickTechPro - Complete Tech Solutions | Remote Computer Repair, Website Design & Web Apps",
   description: "QuickTechPro offers comprehensive tech solutions including remote computer repair, professional website design, and custom web application development. India-based, serving globally with transparent pricing.",
   keywords: "remote computer repair, website design, web development, tech support, software solutions, India",
