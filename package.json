@@ -1,6 +1,7 @@
 {
-  "name": "quicktechpro-temp",
-  "version": "0.1.0",
+  "name": "quicktechpro",
+  "version": "1.0.0",
+  "description": "QuickTechPro - Professional Tech Services Website",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -11,7 +12,12 @@
   "dependencies": {
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.4.6"
+    "next": "15.4.6",
+    "react-hook-form": "^7.48.0",
+    "framer-motion": "^11.0.0",
+    "nodemailer": "^6.9.8",
+    "@types/nodemailer": "^6.4.14",
+    "mongoose": "^8.0.0"
   },
   "devDependencies": {
     "typescript": "^5",
