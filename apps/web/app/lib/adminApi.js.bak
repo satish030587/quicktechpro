@@ -1,0 +1,161 @@
+import { apiFetch } from './api';
+
+export const AdminAPI = {
+  async summary() {
+    const r = await apiFetch('/admin/summary');
+    if (!r.ok) throw new Error('Failed to load summary');
+    return r.json();
+  },
+  async listUsers() {
+    const r = await apiFetch('/admin/users');
+    if (!r.ok) throw new Error('Failed to list users');
+    return r.json();
+  },
+  async promote(email, role) {
+    const r = await apiFetch('/admin/users/promote', { method: 'POST', body: { email, role } });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.message || 'Promote failed');
+    return j;
+  },
+  async ticketsList(filters) {
+    const params = new URLSearchParams();
+    Object.entries(filters || {}).forEach(([k, v]) => { if (v) params.set(k, v); });
+    const r = await apiFetch(`/admin/tickets?${params.toString()}`);
+    if (!r.ok) throw new Error('Failed to load tickets');
+    return r.json();
+  },
+  async ticket(id) {
+    const r = await apiFetch(`/admin/tickets/${id}`);
+    if (!r.ok) throw new Error('Failed to load ticket');
+    return r.json();
+  },
+  async ticketMessage(id, senderId, content, internal=false) {
+    const path = internal ? `/admin/tickets/${id}/notes` : `/admin/tickets/${id}/messages`;
+    const r = await apiFetch(path, { method: 'POST', body: { senderId, content, internal } });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.message || 'Failed to post message');
+    return j;
+  },
+  async startRemoteSession(id, payload) {
+    const r = await apiFetch(`/admin/tickets/${id}/remote-session/start`, { method: 'POST', body: payload });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.message || 'Failed to start session');
+    return j;
+  },
+  async endRemoteSession(id, payload) {
+    const r = await apiFetch(`/admin/tickets/${id}/remote-session/end`, { method: 'POST', body: payload });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.message || 'Failed to end session');
+    return j;
+  },
+  async invoices(status) {
+    const r = await apiFetch(`/admin/invoices${status ? `?status=${status}` : ''}`);
+    if (!r.ok) throw new Error('Failed to load invoices');
+    return r.json();
+  },
+  async payments(status) {
+    const r = await apiFetch(`/admin/payments${status ? `?status=${status}` : ''}`);
+    if (!r.ok) throw new Error('Failed to load payments');
+    return r.json();
+  },
+  async reconcilePayment(id, status) {
+    const r = await apiFetch(`/admin/payments/${id}/reconcile`, { method: 'PATCH', body: { status } });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.message || 'Failed to reconcile');
+    return j;
+  },
+  async contentPosts(status) {
+    const r = await apiFetch(`/admin/content/posts${status ? `?status=${status}` : ''}`);
+    if (!r.ok) throw new Error('Failed to load posts');
+    return r.json();
+  },
+  async contentPostStatus(id, status) {
+    const r = await apiFetch(`/admin/content/posts/${id}/status`, { method: 'PATCH', body: { status } });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.message || 'Failed to update');
+    return j;
+  },
+  async testimonials(approved) {
+    const qs = approved == null ? '' : `?approved=${approved}`;
+    const r = await apiFetch(`/admin/content/testimonials${qs}`);
+    if (!r.ok) throw new Error('Failed to load testimonials');
+    return r.json();
+  },
+  async testimonialApprove(id, approved) {
+    const r = await apiFetch(`/admin/content/testimonials/${id}/approve`, { method: 'PATCH', body: { approved } });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.message || 'Failed');
+    return j;
+  },
+  async appointments(params) {
+    const p = new URLSearchParams();
+    Object.entries(params || {}).forEach(([k, v]) => { if (v) p.set(k, v); });
+    const r = await apiFetch(`/admin/appointments?${p.toString()}`);
+    if (!r.ok) throw new Error('Failed to load appointments');
+    return r.json();
+  },
+  async createAppointment(payload) {
+    const r = await apiFetch('/admin/appointments', { method: 'POST', body: payload });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.message || 'Failed');
+    return j;
+  },
+  async updateAppointment(id, payload) {
+    const r = await apiFetch(`/admin/appointments/${id}`, { method: 'PATCH', body: payload });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.message || 'Failed');
+    return j;
+  },
+  async reportSummary(from, to) {
+    const p = new URLSearchParams();
+    if (from) p.set('from', from);
+    if (to) p.set('to', to);
+    const r = await apiFetch(`/admin/reports/summary?${p.toString()}`);
+    if (!r.ok) throw new Error('Failed to load summary');
+    return r.json();
+  },
+  async settingsGet() {
+    const r = await apiFetch('/admin/settings');
+    if (!r.ok) throw new Error('Failed to load settings');
+    return r.json();
+  },
+  async settingsSave(payload) {
+    const r = await apiFetch('/admin/settings', { method: 'POST', body: payload });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.message || 'Failed to save');
+    return j;
+  },
+  async updateTicket(id, payload) {
+    const r = await apiFetch(`/admin/tickets/${id}`, { method: 'PATCH', body: payload });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.message || 'Failed to update ticket');
+    return j;
+  },
+  async catalog() {
+    const r = await apiFetch('/admin/services/catalog');
+    if (!r.ok) throw new Error('Failed to load catalog');
+    return r.json();
+  },
+  async upsertCategory(body){
+    const r = await apiFetch('/admin/services/category', { method:'POST', body });
+    const j = await r.json(); if (!r.ok) throw new Error(j.message||'Failed'); return j;
+  },
+  async upsertService(body){
+    const r = await apiFetch('/admin/services/service', { method:'POST', body });
+    const j = await r.json(); if (!r.ok) throw new Error(j.message||'Failed'); return j;
+  },
+  async upsertPrice(body){
+    const r = await apiFetch('/admin/services/price', { method:'POST', body });
+    const j = await r.json(); if (!r.ok) throw new Error(j.message||'Failed'); return j;
+  },
+  // KB
+  async kbCategories(){ const r = await apiFetch('/admin/kb/categories'); if (!r.ok) throw new Error('Failed'); return r.json(); },
+  async kbUpsertCategory(body){ const r = await apiFetch('/admin/kb/category', { method:'POST', body }); const j = await r.json(); if (!r.ok) throw new Error(j.message||'Failed'); return j; },
+  async kbArticles(filter){ const p = new URLSearchParams(); Object.entries(filter||{}).forEach(([k,v])=>{ if(v) p.set(k,v); }); const r = await apiFetch(`/admin/kb/articles?${p.toString()}`); if (!r.ok) throw new Error('Failed'); return r.json(); },
+  async kbUpsertArticle(body){ const r = await apiFetch('/admin/kb/article', { method:'POST', body }); const j = await r.json(); if (!r.ok) throw new Error(j.message||'Failed'); return j; },
+  async kbSetArticleStatus(id, status){ const r = await apiFetch(`/admin/kb/articles/${id}/status`, { method:'PATCH', body:{ status } }); const j = await r.json(); if (!r.ok) throw new Error(j.message||'Failed'); return j; },
+  // Notifications
+  async notificationsList(filter){ const p = new URLSearchParams(); Object.entries(filter||{}).forEach(([k,v])=>{ if(v!=='' && v!=null) p.set(k,v); }); const r = await apiFetch(`/admin/notifications?${p.toString()}`); if (!r.ok) throw new Error('Failed'); return r.json(); },
+  async notificationsMarkRead(id){ const r = await apiFetch(`/admin/notifications/${id}/read`, { method:'POST' }); const j = await r.json(); if (!r.ok) throw new Error(j.message||'Failed'); return j; },
+  async notificationsBroadcast(body){ const r = await apiFetch('/admin/notifications/broadcast', { method:'POST', body }); const j = await r.json(); if (!r.ok) throw new Error(j.message||'Failed'); return j; }
+};

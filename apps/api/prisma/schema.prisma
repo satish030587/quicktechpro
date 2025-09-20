@@ -1,0 +1,607 @@
+// Prisma schema for QuickTechPro authentication
+// Database: PostgreSQL (adjust provider if needed)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===================== ADMIN ENTITIES =====================
+
+enum TicketType {
+  REMOTE
+  ONSITE
+  WEBDEV
+}
+enum TicketStatus {
+  NEW
+  OPEN
+  IN_PROGRESS
+  ON_HOLD
+  RESOLVED
+  CLOSED
+  CANCELED
+}
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model CustomerProfile {
+  userId   String  @id
+  fullName String?
+  company  String?
+  phone    String?
+  address  String?
+  city     String?
+  pinCode  String?
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Ticket {
+  id          String       @id @default(cuid())
+  code        String       @unique
+  type        TicketType
+  status      TicketStatus @default(NEW)
+  billingStatus BillingStatus @default(UNPAID)
+  priority    Priority     @default(MEDIUM)
+  title       String
+  description String
+  customerId  String
+  assignedToId String?
+  invoiceId   String?
+  paymentId   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  customer    User         @relation("TicketCustomer", fields: [customerId], references: [id])
+  assignedTo  User?        @relation("TicketAssignee", fields: [assignedToId], references: [id])
+  messages    TicketMessage[]
+  attachments TicketAttachment[]
+  audits      TicketAudit[]
+  appointment Appointment?
+  invoice     Invoice?     @relation(fields: [invoiceId], references: [id])
+  payment     Payment?     @relation(fields: [paymentId], references: [id])
+  remoteSessions RemoteSession[]
+
+  @@index([customerId])
+  @@index([assignedToId])
+}
+
+model TicketMessage {
+  id        String   @id @default(cuid())
+  ticketId  String
+  senderId  String
+  internal  Boolean  @default(false)
+  content   String
+  createdAt DateTime @default(now())
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  sender    User     @relation(fields: [senderId], references: [id])
+  @@index([ticketId])
+}
+
+model TicketAttachment {
+  id        String   @id @default(cuid())
+  ticketId  String
+  url       String
+  filename  String
+  createdAt DateTime @default(now())
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+}
+
+model TicketAudit {
+  id        String   @id @default(cuid())
+  ticketId  String
+  actorId   String?
+  action    String
+  details   Json?
+  createdAt DateTime @default(now())
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  actor     User?    @relation(fields: [actorId], references: [id])
+}
+
+enum InvoiceStatus {
+  DRAFT
+  PENDING
+  PAID
+  OVERDUE
+  CANCELED
+}
+
+model Invoice {
+  id         String        @id @default(cuid())
+  number     String        @unique
+  customerId String
+  status     InvoiceStatus @default(PENDING)
+  subtotal   Decimal       @db.Decimal(12,2)
+  tax        Decimal       @db.Decimal(12,2)
+  total      Decimal       @db.Decimal(12,2)
+  currency   String        @default("INR")
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  customer   User          @relation(fields: [customerId], references: [id])
+  items      InvoiceItem[]
+  payments   Payment[]
+  tickets    Ticket[]
+}
+
+model InvoiceItem {
+  id        String   @id @default(cuid())
+  invoiceId String
+  name      String
+  qty       Int      @default(1)
+  price     Decimal  @db.Decimal(12,2)
+  total     Decimal  @db.Decimal(12,2)
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+enum PaymentStatus {
+  CREATED
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+model Payment {
+  id           String        @id @default(cuid())
+  invoiceId    String
+  amount       Decimal       @db.Decimal(12,2)
+  method       String
+  status       PaymentStatus @default(CREATED)
+  provider     String?
+  providerTxnId String?
+  providerOrderId String?
+  metadata     Json?
+  createdTicketId String?
+  createdAt    DateTime      @default(now())
+  invoice      Invoice       @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  tickets      Ticket[]
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  COMPLETED
+  CANCELED
+  NO_SHOW
+}
+
+model Appointment {
+  id             String            @id @default(cuid())
+  ticketId       String            @unique
+  scheduledAt    DateTime
+  durationMins   Int               @default(60)
+  address        String?
+  notes          String?
+  technicianId   String?
+  status         AppointmentStatus @default(SCHEDULED)
+  ticket         Ticket            @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  technician     User?             @relation(fields: [technicianId], references: [id])
+}
+
+enum BlogStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+model BlogCategory {
+  id    Int        @id @default(autoincrement())
+  name  String     @unique
+  posts BlogPost[]
+}
+
+model BlogPost {
+  id             String       @id @default(cuid())
+  title          String
+  slug           String       @unique
+  excerpt        String?
+  aiSummary      String?
+  content        String
+  coverImage     String?
+  status         BlogStatus   @default(DRAFT)
+  allowComments  Boolean      @default(true)
+  featured       Boolean      @default(false)
+  tags           String[]     @default([])
+  readingMinutes Int?
+  authorId       String
+  categoryId     Int?
+  publishedAt    DateTime?
+  isDeleted      Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  author         User         @relation(fields: [authorId], references: [id])
+  category       BlogCategory? @relation(fields: [categoryId], references: [id])
+  comments       BlogComment[]
+  metrics        BlogPostMetric[]
+  translations  BlogPostTranslation[]
+}
+
+
+enum BlogCommentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model BlogComment {
+  id             String             @id @default(cuid())
+  postId         String
+  authorId       String?
+  authorName     String?
+  authorEmail    String?
+  content        String
+  status         BlogCommentStatus @default(PENDING)
+  languageCode   String?
+  toxicityScore  Float?
+  spamScore      Float?
+  autoFlagged    Boolean           @default(false)
+  moderationTags String[]          @default([])
+  analyzedAt     DateTime?
+  parentId       String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  post           BlogPost          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author         User?             @relation(fields: [authorId], references: [id])
+  parent         BlogComment?      @relation("BlogCommentReplies", fields: [parentId], references: [id])
+  replies        BlogComment[]     @relation("BlogCommentReplies")
+
+  @@index([postId])
+  @@index([parentId])
+}
+
+model BlogPostMetric {
+  id               String              @id @default(cuid())
+  postId           String
+  metricDate       DateTime
+  viewCount        Int                 @default(0)
+  uniqueVisitors   Int                 @default(0)
+  totalReadSeconds Float               @default(0)
+  avgReadSeconds   Float               @default(0)
+  sourceBreakdown  Json?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  post             BlogPost            @relation(fields: [postId], references: [id], onDelete: Cascade)
+  visitors         BlogPostMetricVisitor[]
+
+  @@unique([postId, metricDate])
+}
+
+model BlogPostMetricVisitor {
+  id          String         @id @default(cuid())
+  metricId    String
+  visitorHash String
+  visitCount  Int            @default(0)
+  lastSeen    DateTime       @default(now())
+  metric      BlogPostMetric @relation(fields: [metricId], references: [id], onDelete: Cascade)
+
+  @@unique([metricId, visitorHash])
+}
+
+
+model BlogPostTranslation {
+  id        String   @id @default(cuid())
+  postId    String
+  language  String
+  title     String
+  excerpt   String?
+  content   String
+  aiSummary String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  post      BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, language])
+}
+
+model BlogSubscriber {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  name           String?
+  verified       Boolean  @default(true)
+  token          String   @unique
+  unsubscribed   Boolean  @default(false)
+  unsubscribedAt DateTime?
+  preferences    Json?
+  lastNotifiedAt DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model BlogEmailLog {
+  id        String   @id @default(cuid())
+  type      String
+  recipient String
+  subject   String
+  body      String
+  metadata  Json?
+  createdAt DateTime @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  author    String
+  content   String
+  rating    Int
+  service   String?
+  area      String?
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model ServiceCategory {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  slug      String    @unique
+  description String?
+  sortOrder Int       @default(0)
+  active    Boolean   @default(true)
+  services  Service[]
+}
+
+model Service {
+  id          String          @id @default(cuid())
+  name        String
+  slug        String          @unique
+  description String?
+  longDescription String?
+  heroImage   String?
+  seoTitle    String?
+  seoDescription String?
+  isRemote    Boolean         @default(false)
+  isOnsite    Boolean         @default(false)
+  isWeb       Boolean         @default(false)
+  payFirst    Boolean         @default(false)
+  requiresLogin Boolean       @default(false)
+  allowUnpaidForB2B Boolean   @default(false)
+  appointmentRequired Boolean @default(false)
+  quoteRequired Boolean       @default(false)
+  defaultDurationMins Int?
+  cityConstraint   String?
+  areaCoverage     Json?
+  activeFrom   DateTime?
+  activeTo     DateTime?
+  active       Boolean        @default(true)
+  sortOrder    Int            @default(0)
+  categoryId   Int?
+  category     ServiceCategory? @relation(fields: [categoryId], references: [id])
+  prices       ServicePrice[]
+}
+
+model ServicePrice {
+  id        String   @id @default(cuid())
+  serviceId String
+  label     String
+  amount    Decimal  @db.Decimal(12,2)
+  currency  String   @default("INR")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  features  Json?
+  compareAt Decimal? @db.Decimal(12,2)
+  badge     String?
+}
+
+enum QuoteStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+}
+
+model Quote {
+  id         String      @id @default(cuid())
+  customerId String
+  title      String
+  status     QuoteStatus @default(DRAFT)
+  total      Decimal     @db.Decimal(12,2)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  customer   User        @relation(fields: [customerId], references: [id])
+  items      QuoteItem[]
+}
+
+model QuoteItem {
+  id       String   @id @default(cuid())
+  quoteId  String
+  name     String
+  qty      Int      @default(1)
+  price    Decimal  @db.Decimal(12,2)
+  total    Decimal  @db.Decimal(12,2)
+  quote    Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+}
+
+model KBCategory {
+  id    Int                @id @default(autoincrement())
+  name  String             @unique
+  items KnowledgeBaseArticle[]
+}
+
+model KnowledgeBaseArticle {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  content     String
+  categoryId  Int?
+  status      BlogStatus @default(DRAFT)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  category    KBCategory? @relation(fields: [categoryId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String?
+  type      String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model SystemLog {
+  id        String   @id @default(cuid())
+  level     String
+  message   String
+  meta      Json?
+  createdAt DateTime @default(now())
+}
+
+model IntegrationSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  jsonValue Json
+  updatedAt DateTime @updatedAt
+}
+
+model Setting {
+  key       String  @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+enum BillingStatus {
+  UNPAID
+  PAID
+  REFUNDED
+}
+
+model RemoteSession {
+  id          String   @id @default(cuid())
+  ticketId    String
+  tool        String
+  joinLink    String?
+  code        String?
+  technicianId String?
+  startedAt   DateTime @default(now())
+  endedAt     DateTime?
+  notes       String?
+  ticket      Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  technician  User?    @relation(fields: [technicianId], references: [id])
+}
+model User {
+  id             String         @id @default(cuid())
+  email          String         @unique
+  emailVerified  DateTime?
+  phone          String?        @unique
+  name           String?
+  passwordHash   String
+  isActive       Boolean        @default(true)
+  marketingEmailOptIn Boolean   @default(false)
+  marketingSmsOptIn   Boolean   @default(false)
+  privacyAcceptedAt   DateTime?
+  roles          UserRole[]
+  refreshTokens  RefreshToken[]
+  totpSecret     TotpSecret?
+  totpRecovery   TotpRecoveryCode[]
+  authAttempts   AuthAttempt[]
+  verificationTokens VerificationToken[]
+  passwordResetTokens PasswordResetToken[]
+  customerProfile CustomerProfile?
+  ticketsAsCustomer Ticket[]       @relation("TicketCustomer")
+  ticketsAssigned   Ticket[]       @relation("TicketAssignee")
+  invoices          Invoice[]
+  appointmentsAsTechnician Appointment[]
+  blogPosts         BlogPost[]
+  blogComments      BlogComment[]
+  notifications     Notification[]
+  quotes            Quote[]
+  ticketMessages    TicketMessage[]
+  ticketAudits      TicketAudit[]
+  remoteSessionsAsTechnician RemoteSession[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  // convenience computed: none
+}
+
+model Role {
+  id    Int        @id @default(autoincrement())
+  name  String     @unique // e.g., 'customer', 'admin'
+  users UserRole[]
+}
+
+model UserRole {
+  userId String
+  roleId Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+}
+
+model RefreshToken {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   // store a hash of token for security
+  userAgent  String?
+  ip         String?
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   // hash of email verification token
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   // hash of password reset token
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model TotpSecret {
+  userId     String   @id
+  secret     String   // base32 secret
+  enabled    Boolean  @default(false)
+  verifiedAt DateTime?
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TotpRecoveryCode {
+  id        String   @id @default(cuid())
+  userId    String
+  codeHash  String
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model AuthAttempt {
+  id        String   @id @default(cuid())
+  userId    String?
+  email     String?
+  success   Boolean
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+  @@index([userId])
+  @@index([email])
+}
+
