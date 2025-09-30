@@ -1,622 +1,698 @@
 "use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import { CheckCircleIcon, ChevronRightIcon } from './components/Icons';
+import { useEffect, useState } from "react";
+import {
+  BriefcaseIcon,
+  CheckIcon,
+  ChevronRightIcon,
+  ClockIcon,
+  ComputerIcon,
+  GlobeIcon,
+  ShieldCheckIcon,
+} from "./components/Icons";
+
+const heroSlides = [
+  {
+    key: "remote",
+    image: "/images/remote-support.jpg",
+    alt: "Technician providing remote support",
+    chip: "Remote support - No fix, no fee",
+    title: "Remote Tech Support in Minutes",
+    text: "Secure one-time sessions that solve slow systems, Wi-Fi drops, printer issues, and malware without stepping out.",
+    cta: { href: "/book-service?type=remote", label: "Book Remote Support" },
+    secondary: { href: "/services/remote-support", label: "View Remote Scope" },
+  },
+  {
+    key: "repairs",
+    image: "/images/onsite-support.jpg",
+    alt: "Laptop repair bench",
+    chip: "Diagnostics first - 90 day warranty",
+    title: "Ship-in Laptop and PC Repairs",
+    text: "Certified technicians restore your hardware with transparent quotes, quality parts, and detailed health reports.",
+    cta: { href: "/book-service?type=repair", label: "Start a Repair" },
+    secondary: { href: "/services/ship-in-repairs", label: "Repair Checklist" },
+  },
+  {
+    key: "apps",
+    image: "/images/business-website.png",
+    alt: "Business dashboard interface",
+    chip: "Fixed quote - Milestone billing",
+    title: "Small Business Web Apps",
+    text: "Launch tailored booking, inventory, and client portals with modern UX, milestone demos, and documentation.",
+    cta: { href: "/services/web-apps#estimate", label: "Request App Estimate" },
+    secondary: { href: "/pricing#web-apps", label: "See Pricing Bundles" },
+  },
+  {
+    key: "laptops",
+    image: "/images/people-with-laptops-office.jpg",
+    alt: "Professionals using refurbished laptops",
+    chip: "Certified devices - Weekly stock",
+    title: "Quality Used Laptops",
+    text: "Enterprise grade laptops with fresh OS installs, stress tests, and 90 day warranty ready for work or study.",
+    cta: { href: "/used-laptops", label: "Browse Current Stock" },
+    secondary: { href: "/contact?topic=laptops", label: "Request Sourcing" },
+  },
+];
+
+const trustStats = [
+  { value: "1,200+", label: "Support sessions delivered" },
+  { value: "65+", label: "Active business clients" },
+  { value: "90 days", label: "Repair workmanship warranty" },
+  { value: "4.9 / 5", label: "Average customer rating" },
+];
+
+const serviceCards = [
+  {
+    title: "Remote Tech Support",
+    description: "Encrypted screen share, quick diagnostics, and no fix no fee promise.",
+    price: "Sessions from Rs. 1,499",
+    href: "/services#remote-support",
+    cta: "Explore Remote",
+    icon: ComputerIcon,
+  },
+  {
+    title: "Ship-in Laptop Repairs",
+    description: "Free diagnostics, approved quotes, and OEM grade parts on every repair.",
+    price: "Labour from Rs. 2,499",
+    href: "/services#ship-in-repairs",
+    cta: "Explore Repairs",
+    icon: BriefcaseIcon,
+  },
+  {
+    title: "Small Business Web Apps",
+    description: "Discovery workshops, UI kit, integrations, and post launch optimisation.",
+    price: "Projects from Rs. 45,000",
+    href: "/services#web-apps",
+    cta: "Explore Web Apps",
+    icon: GlobeIcon,
+  },
+  {
+    title: "Certified Used Laptops",
+    description: "Stress tested inventory with documentation, sanitisation, and warranty.",
+    price: "Stock from Rs. 18,500",
+    href: "/services#used-laptops",
+    cta: "Explore Devices",
+    icon: ShieldCheckIcon,
+  },
+];
+
+const remoteHighlights = [
+  "Certified technicians with same day availability",
+  "Secure, consent based access with audit logs",
+  "Fixes for OS tune ups, connectivity, email, and printing",
+  "Follow up for the same issue free within seven days",
+];
+
+const repairSteps = [
+  {
+    title: "Diagnostics and report",
+    copy: "We capture symptoms, run a 16 point hardware check, and share findings within 24 hours.",
+  },
+  {
+    title: "Transparent approval",
+    copy: "Quotes list parts and labour clearly. Work only begins once you approve the plan.",
+  },
+  {
+    title: "Precision repair",
+    copy: "ESD safe benches, Grade A or OEM parts, and frequent status updates through completion.",
+  },
+  {
+    title: "Quality assurance",
+    copy: "Stress tests, thermal checks, clean OS handover, and insured return shipping.",
+  },
+];
+
+const webAppHighlights = [
+  "Discovery workshop and requirements brief",
+  "Wireframes and component library aligned to your brand",
+  "Responsive build on modern frameworks with staging demos",
+  "Payment, CRM, or inventory integrations as needed",
+  "Launch documentation and handover training",
+  "30 day optimisation sprint after go live",
+];
+
+const laptopHighlights = [
+  "Inventory sourced from enterprise refresh programs",
+  "Fresh OS image with licensed software and drivers",
+  "Battery health above 85 percent and stress tested thermals",
+  "Data sanitisation certificate and cosmetic grading",
+  "Upgrade options for RAM, storage, and accessories",
+];
+
+const valueProps = [
+  {
+    title: "Same week turnarounds",
+    description: "Remote sessions, urgent repairs, and quick web iterations are prioritised to minimise downtime.",
+    icon: ClockIcon,
+  },
+  {
+    title: "Certified expertise",
+    description: "Team members hold vendor and CompTIA credentials across Windows, macOS, and Linux stacks.",
+    icon: ShieldCheckIcon,
+  },
+  {
+    title: "Documented outcomes",
+    description: "Every service includes before and after notes, recommendations, and digital paperwork.",
+    icon: BriefcaseIcon,
+  },
+];
+
+const testimonials = [
+  {
+    quote: "Remote session resolved a complex Outlook sync issue in under an hour and came with clear prevention tips.",
+    name: "Anita Rao",
+    role: "Operations Lead, FinServe Co.",
+  },
+  {
+    quote: "Our laptops came back cleaner than new with thermal issues fixed and full reports for compliance.",
+    name: "Rahul Shah",
+    role: "Founder, Design Lab",
+  },
+  {
+    quote: "The booking app launch was smooth, milestones were transparent, and adoption was instant for our staff.",
+    name: "Meera Thomas",
+    role: "Clinic Director, HealthFirst",
+  },
+];
+
+const faqs = [
+  {
+    question: "Do you share quotes before work begins?",
+    answer: "Yes. Remote sessions are billed only after resolution. Repairs and projects move forward only after you approve a documented quote.",
+  },
+  {
+    question: "Can you support hybrid teams across cities?",
+    answer: "Remote sessions and managed care plans cover devices anywhere. Ship in repairs and laptop sourcing include insured logistics.",
+  },
+  {
+    question: "How quickly can I get started?",
+    answer: "Remote slots are available the same day. Repairs usually start within 24 hours of arrival. Web projects kick off after a discovery call.",
+  },
+];
+
+function ArrowLeftIcon(props) {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" {...props}>
+      <path d="M12.707 15.707a1 1 0 01-1.414 0L6 10.414l5.293-5.293a1 1 0 111.414 1.414L8.414 10l4.293 4.293a1 1 0 010 1.414z" />
+    </svg>
+  );
+}
+
+function ArrowRightIcon(props) {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" {...props}>
+      <path d="M7.293 4.293a1 1 0 011.414 0L13 8.586 8.707 12.88a1 1 0 01-1.414-1.414L10.172 9 7.293 6.121a1 1 0 010-1.828z" />
+    </svg>
+  );
+}
+
+function HeroCarousel() {
+  const slides = heroSlides;
+  const FALLBACK = "/images/hero-bg.jpg";
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (paused) return undefined;
+    const id = setInterval(() => setIndex((i) => (i + 1) % slides.length), 7000);
+    return () => clearInterval(id);
+  }, [paused, slides.length]);
+
+  const goTo = (i) => setIndex((i + slides.length) % slides.length);
+  const current = slides[index];
+
+  return (
+    <section
+      className="relative isolate flex h-screen min-h-[640px] w-full overflow-hidden -mt-[4.5rem]"
+      aria-roledescription="carousel"
+      aria-label="QuickTech Pro service highlights"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {slides.map((slide, i) => (
+        <div
+          key={slide.key}
+          className={`absolute inset-0 transition-opacity duration-700 ${i === index ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        >
+          <Image
+            src={slide.image || FALLBACK}
+            alt={slide.alt}
+            fill
+            priority={i === 0}
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/45 to-black/25" />
+        </div>
+      ))}
+
+      <div className="relative z-10 flex h-full w-full items-center">
+        <div className="layout-container max-w-screen-xl flex h-full flex-col justify-center">
+          <div className="w-full max-w-3xl space-y-8 text-left text-white">
+            <div className="inline-flex items-center gap-3 rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white/90 backdrop-blur">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-sm font-semibold text-white">
+                IT
+              </span>
+              <span>{current.chip}</span>
+            </div>
+
+            <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">{current.title}</h1>
+
+            <p className="text-lg md:text-xl text-white/85">{current.text}</p>
+
+            <div className="flex flex-wrap items-center gap-4">
+              <Link
+                className="inline-flex items-center justify-center rounded-full bg-blue-500 px-8 py-3 text-base font-semibold text-white shadow-lg transition-colors hover:bg-blue-600"
+                href={current.cta.href}
+              >
+                {current.cta.label}
+              </Link>
+              <Link
+                className="inline-flex items-center justify-center rounded-full border border-white/60 px-6 py-3 text-base font-semibold text-white/90 transition-colors hover:bg-white/10"
+                href={current.secondary.href}
+              >
+                {current.secondary.label}
+                <ChevronRightIcon className="ml-1.5 h-5 w-5" />
+              </Link>
+            </div>
+
+            <p className="text-xs md:text-sm text-white/75">
+              Remote experts - Diagnostics first repairs - Fixed quote web apps - Certified hardware sourcing
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="absolute bottom-6 left-0 right-0 z-20">
+        <div className="layout-container flex items-center justify-between">
+          <div className="flex gap-2" aria-label="Carousel slides">
+            {slides.map((slide, i) => (
+              <button
+                key={slide.key}
+                onClick={() => goTo(i)}
+                aria-label={`Go to ${slide.title}`}
+                className={`h-2.5 w-8 rounded-full transition-all ${i === index ? "bg-white" : "bg-white/40 hover:bg-white/60"}`}
+              />
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => goTo(index - 1)}
+              aria-label="Previous slide"
+              className="rounded-full bg-white/15 p-2 text-white transition hover:bg-white/25"
+            >
+              <ArrowLeftIcon className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => goTo(index + 1)}
+              aria-label="Next slide"
+              className="rounded-full bg-white/15 p-2 text-white transition hover:bg-white/25"
+            >
+              <ArrowRightIcon className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function HomePage() {
   return (
     <main>
-      {/* Hero Section with video background */}
-      <section className="relative h-screen min-h-[640px] w-full overflow-hidden -mt-14">
-        <video
-          className="absolute inset-0 h-full w-full object-cover"
-          autoPlay
-          loop
-          muted
-          playsInline
-        >
-          <source src="/videos/hero.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 flex h-full">
-          <div className="layout-container flex h-full flex-col justify-center pt-16 pb-16">
-            <div className="space-y-12 text-white text-left w-full">
-              <div className="inline-flex items-center gap-3 rounded-full bg-white/15 px-4 py-2 text-base font-medium text-white/90 backdrop-blur">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-blue-500 text-base font-medium text-white">IT</span>
-                <span>Trusted technicians for small businesses</span>
-              </div>
-              <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-7xl">Innovative IT Solutions for Modern Businesses</h1>
-              <p className="max-w-2xl text-xl text-white/85 md:text-2xl md:leading-relaxed">Keep your technology running smoothly with certified technicians delivering instant remote support, on-site repairs, and custom web experiences tailored for growing businesses.</p>
-              <div className="flex flex-wrap gap-4">
-                <Link className="inline-flex items-center justify-center rounded-full bg-blue-500 px-9 py-3.5 text-lg font-semibold text-white shadow-lg transition-colors hover:bg-blue-600" href="/book-service?type=remote">Book appointment</Link>
-                <Link className="inline-flex items-center justify-center rounded-full border border-white/60 px-9 py-3.5 text-lg font-semibold text-white transition-colors hover:bg-white/10" href="/contact">
-                  Talk to a specialist
-                  <ChevronRightIcon className="ml-2 h-5 w-5" />
-                </Link>
-              </div>
+      <HeroCarousel />
+
+      <section className="w-full border-t border-b border-gray-200 bg-gray-50 py-12">
+        <div className="layout-container grid grid-cols-2 gap-6 text-center md:grid-cols-4">
+          {trustStats.map((item) => (
+            <div key={item.label} className="rounded-xl bg-white p-6 shadow-sm">
+              <p className="text-2xl font-bold text-gray-900">{item.value}</p>
+              <p className="mt-2 text-sm text-gray-600">{item.label}</p>
             </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Trust Indicators */}
-      <section className="w-full bg-gray-50 py-12 border-t border-b border-gray-200">
+      <section className="w-full bg-white py-20">
         <div className="layout-container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <h3 className="text-4xl font-bold text-blue-600 mb-1">500+</h3>
-              <p className="text-gray-600 font-medium">Computers Repaired</p>
-            </div>
-            <div className="text-center">
-              <h3 className="text-4xl font-bold text-blue-600 mb-1">50+</h3>
-              <p className="text-gray-600 font-medium">Business Clients</p>
-            </div>
-            <div className="text-center">
-              <h3 className="text-4xl font-bold text-blue-600 mb-1">24/7</h3>
-              <p className="text-gray-600 font-medium">Emergency Support</p>
-            </div>
-            <div className="text-center">
-              <h3 className="text-4xl font-bold text-blue-600 mb-1">98%</h3>
-              <p className="text-gray-600 font-medium">First-Time Fix Rate</p>
-            </div>
+          <div className="mb-12 max-w-3xl">
+            <h2 className="text-3xl font-bold text-gray-900">One trusted partner for every technology need</h2>
+            <p className="mt-4 text-lg text-gray-600">
+              QuickTech Pro blends remote experts, a certified repair lab, web engineers, and hardware sourcing under one roof so you can keep teams productive without juggling multiple vendors.
+            </p>
           </div>
-        </div>
-      </section>
-
-      {/* About Company Section (Similar to the reference) */}
-      <section className="w-full bg-white py-16">
-        <div className="layout-container">
-          <div className="flex flex-col md:flex-row gap-12 items-center">
-            <div className="md:w-1/2">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">About Our Company</h2>
-              <p className="text-gray-600 mb-6">With years of expertise in the technology industry, we specialize in delivering reliable IT solutions, computer repair services, and web development projects that meet the unique needs of small businesses and individuals.</p>
-              <p className="text-gray-600 mb-8">Our certified technicians are committed to providing fast, effective solutions with transparent pricing and exceptional customer service.</p>
-              <Link href="/about" className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 transition-colors">
-                Learn More
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </Link>
-            </div>
-            <div className="md:w-1/2">
-              <div className="rounded-lg overflow-hidden shadow-lg">
-                <Image 
-                  src="/images/about-us.jpg"
-                  alt="IT professionals at work" 
-                  width={600}
-                  height={200}
-                  className="w-full h-auto object-cover"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Overview - Using tabs like reference */}
-      <section className="w-full py-16 bg-gray-50">
-        <div className="layout-container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Services Tailored to You</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">From quick remote fixes to complete business IT solutions - we've got you covered with transparent, upfront pricing.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 text-center hover:shadow-lg transition-shadow">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Remote Support</h3>
-              <p className="text-gray-600 mb-5">Instant help for virus removal, system optimization, and software issues. Connect securely.</p>
-              <Link href="/services/remote-support" className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 transition-colors">
-                Learn More
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </Link>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 text-center hover:shadow-lg transition-shadow">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Onsite Support</h3>
-              <p className="text-gray-600 mb-5">Professional technician visits for hardware repairs and network setup in Bangalore.</p>
-              <Link href="/services/onsite-support" className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 transition-colors">
-                Learn More
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </Link>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 text-center hover:shadow-lg transition-shadow">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Web Development</h3>
-              <p className="text-gray-600 mb-5">Custom websites, e-commerce platforms, and web applications for small businesses.</p>
-              <Link href="/services/web-development" className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 transition-colors">
-                Learn More
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </Link>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 text-center hover:shadow-lg transition-shadow">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Data Recovery</h3>
-              <p className="text-gray-600 mb-5">Professional data recovery services for hard drives, SSDs, and other storage devices.</p>
-              <Link href="/services/data-recovery" className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 transition-colors">
-                Learn More
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </Link>
-            </div>
-          </div>
-
-          <div className="mt-10 text-center">
-            <Link href="/services" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-              View All Services
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Projects Section - Similar to reference */}
-      <section className="w-full bg-white py-16">
-        <div className="layout-container">
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Projects</h2>
-            <p className="text-lg text-gray-600">Explore our portfolio of successful projects, where innovative design, quality craftsmanship, and exceptional outcomes showcase our capabilities.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {/* Project 1 */}
-            <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-              <div className="relative h-64">
-                <img 
-                  src="/images/project1.jpg" 
-                  alt="Corporate office network setup" 
-                  className="w-full h-full object-cover"
-                  
-                  />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Enterprise Network Solution</h3>
-                <p className="text-gray-600 mb-4">A comprehensive network infrastructure implementation for a 100-employee office building with secure remote access capabilities.</p>
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div>
-                    <p className="text-sm text-gray-500">Location</p>
-                    <p className="font-medium">Whitefield, Bangalore</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Date</p>
-                    <p className="font-medium">June 2025</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Scope</p>
-                    <p className="font-medium">Network Infrastructure</p>
-                  </div>
-                </div>
-                <Link href="/projects/network-solution" className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 transition-colors">
-                  View Details
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </Link>
-              </div>
-            </div>
-
-            {/* Project 2 */}
-            <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-              <div className="relative h-64">
-                <img 
-                  src="/images/project2.jpg" 
-                  alt="E-commerce website development" 
-                  className="w-full h-full object-cover"
-                  
-                  />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">E-commerce Platform Launch</h3>
-                <p className="text-gray-600 mb-4">A complete e-commerce solution with inventory management, payment processing, and mobile-responsive design for a retail business.</p>
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div>
-                    <p className="text-sm text-gray-500">Client</p>
-                    <p className="font-medium">Fashion Retailer</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Date</p>
-                    <p className="font-medium">May 2025</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Scope</p>
-                    <p className="font-medium">Web Development</p>
-                  </div>
-                </div>
-                <Link href="/projects/ecommerce-platform" className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 transition-colors">
-                  View Details
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </Link>
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-10 text-center">
-            <Link href="/projects" className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md text-blue-600 border border-blue-600 hover:bg-blue-50 transition-colors">
-              View All Projects
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Quality That Speaks Section - Based on reference */}
-      <section className="w-full bg-gray-50 py-16">
-        <div className="layout-container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="order-2 lg:order-1">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Quality That Speaks for Itself</h2>
-              <p className="text-gray-600 mb-8">Our commitment to excellence drives everything we do. We take pride in our work and focus on delivering high-quality results that exceed our customers' expectations.</p>
-              
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600 mt-0.5 mr-3" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <div>
-                    <h3 className="font-bold text-gray-900">Excellence in Every Detail</h3>
-                    <p className="text-gray-600">We pay attention to every aspect of our work, ensuring comprehensive solutions.</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600 mt-0.5 mr-3" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <div>
-                    <h3 className="font-bold text-gray-900">Trusted Expertise, Proven Results</h3>
-                    <p className="text-gray-600">Our certified team brings years of experience to solve your technology challenges.</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600 mt-0.5 mr-3" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <div>
-                    <h3 className="font-bold text-gray-900">Your Vision, Our Commitment</h3>
-                    <p className="text-gray-600">We align our services with your specific needs and business objectives.</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mt-8">
-                <Link href="/about" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-                  Learn More
-                </Link>
-              </div>
-            </div>
-            
-            <div className="order-1 lg:order-2">
-              <div className="rounded-lg overflow-hidden shadow-lg">
-                <img 
-                  src="/images/quality-service.jpg" 
-                  alt="IT professional providing quality service" 
-                  className="w-full h-auto object-cover"
-                  
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works Section - Based on reference */}
-      <section className="w-full bg-white py-16">
-        <div className="layout-container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">We've streamlined our process to make getting IT support as simple as possible. Here's how we make technology work for you.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Step 1 */}
-            <div className="relative">
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center mb-4 relative z-10">
-                  <span className="text-xl font-bold">1</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">Contact Us</h3>
-                <p className="text-gray-600 text-center">Call, WhatsApp, or book online. Describe your issue and choose remote or onsite service.</p>
-              </div>
-              {/* Connector line - hidden on mobile, visible on larger screens */}
-              <div className="hidden lg:block absolute top-8 left-full w-full h-0.5 bg-blue-200 -z-10 transform -translate-x-8"></div>
-            </div>
-            
-            {/* Step 2 */}
-            <div className="relative">
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center mb-4 relative z-10">
-                  <span className="text-xl font-bold">2</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">Upfront Pricing</h3>
-                <p className="text-gray-600 text-center">Get clear, honest pricing before we start. No surprises, no hidden fees.</p>
-              </div>
-              {/* Connector line */}
-              <div className="hidden lg:block absolute top-8 left-full w-full h-0.5 bg-blue-200 -z-10 transform -translate-x-8"></div>
-            </div>
-            
-            {/* Step 3 */}
-            <div className="relative">
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center mb-4 relative z-10">
-                  <span className="text-xl font-bold">3</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">Expert Service</h3>
-                <p className="text-gray-600 text-center">Our certified technicians diagnose and fix your issues quickly and efficiently.</p>
-              </div>
-              {/* Connector line */}
-              <div className="hidden lg:block absolute top-8 left-full w-full h-0.5 bg-blue-200 -z-10 transform -translate-x-8"></div>
-            </div>
-            
-            {/* Step 4 */}
-            <div className="relative">
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center mb-4 relative z-10">
-                  <span className="text-xl font-bold">4</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">Follow-up Support</h3>
-                <p className="text-gray-600 text-center">7-day guarantee on all work. Free follow-up if the same issue returns.</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-12 text-center">
-            <Link href="/book-service" className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-              Book a Service
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section - Based on reference */}
-      <section className="w-full bg-gray-50 py-16">
-        <div className="layout-container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">What Our Clients Say</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">Don't just take our word for it - see what our satisfied clients have to say about our services.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Testimonial 1 */}
-            <div className="bg-white p-8 rounded-lg shadow-md border border-gray-100">
-              <div className="flex items-center mb-4">
-                <div className="text-yellow-400 flex">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-              </div>
-              <blockquote className="mb-4 text-gray-700 italic">
-                "QuickTechPro saved our business when our entire network went down before a major client presentation. Their technician arrived within the hour and had us back online in no time. The follow-up to ensure everything was still working was a nice touch."
-              </blockquote>
-              <div className="flex items-center">
-                <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden mr-4">
-                  <img 
-                      src="/images/testimonial1.jpg" 
-                      alt="Client" 
-                      className="w-full h-full object-cover"
-                      
-                      />
-                </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {serviceCards.map(({ title, description, price, href, cta, icon: Icon }) => (
+              <Link
+                key={title}
+                href={href}
+                className="flex h-full flex-col justify-between rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm transition-transform hover:-translate-y-1 hover:shadow-lg"
+              >
                 <div>
-                  <h4 className="font-bold text-gray-900">Rajiv Mehta</h4>
-                  <p className="text-gray-600 text-sm">Marketing Director, TechVantage Solutions</p>
+                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                    <Icon className="h-6 w-6" />
+                  </span>
+                  <h3 className="mt-5 text-xl font-semibold text-gray-900">{title}</h3>
+                  <p className="mt-3 text-sm text-gray-600">{description}</p>
                 </div>
-              </div>
-            </div>
-            
-            {/* Testimonial 2 */}
-            <div className="bg-white p-8 rounded-lg shadow-md border border-gray-100">
-              <div className="flex items-center mb-4">
-                <div className="text-yellow-400 flex">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
+                <div className="mt-6">
+                  <p className="text-sm font-semibold text-blue-600">{price}</p>
+                  <span className="mt-3 inline-flex items-center text-sm font-semibold text-blue-600">
+                    {cta}
+                    <ChevronRightIcon className="ml-1.5 h-4 w-4" />
+                  </span>
                 </div>
-              </div>
-              <blockquote className="mb-4 text-gray-700 italic">
-                "As a small business owner, I appreciate that QuickTechPro explains technical issues in plain language and provides options that fit our budget. They've helped us set up a secure network and maintain our computers for over two years now."
-              </blockquote>
-              <div className="flex items-center">
-                <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden mr-4">
-                  <img 
-                      src="/images/testimonial2.jpg" 
-                      alt="Client" 
-                      className="w-full h-full object-cover"
-                      
-                      />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900">Priya Sharma</h4>
-                  <p className="text-gray-600 text-sm">Owner, Elegant Interiors</p>
-                </div>
-              </div>
-            </div>
-            
-            {/* Testimonial 3 */}
-            <div className="bg-white p-8 rounded-lg shadow-md border border-gray-100">
-              <div className="flex items-center mb-4">
-                <div className="text-yellow-400 flex">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-              </div>
-              <blockquote className="mb-4 text-gray-700 italic">
-                "I've worked with several IT support companies in Bangalore, and QuickTechPro stands out for their responsiveness and knowledge. Their team developed our company website and handles all our IT support needs with professionalism and efficiency."
-              </blockquote>
-              <div className="flex items-center">
-                <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden mr-4">
-                  <img 
-                      src="/images/testimonial3.jpg" 
-                      alt="Client" 
-                      className="w-full h-full object-cover"
-                      
-                      />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900">Vikram Desai</h4>
-                  <p className="text-gray-600 text-sm">CEO, Innovative Solutions Ltd</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-10 text-center">
-            <Link href="/testimonials" className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md text-blue-600 border border-blue-600 hover:bg-blue-50 transition-colors">
-              View All Testimonials
-            </Link>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* FAQ Section - Based on reference */}
-      <section className="w-full bg-white py-16">
+      <section id="remote-support" className="w-full bg-gray-50 py-20">
+        <div className="layout-container grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
+          <div>
+            <span className="text-sm font-semibold uppercase tracking-wide text-blue-600">Remote Tech Support</span>
+            <h2 className="mt-4 text-3xl font-bold text-gray-900">Fix issues fast with secure remote sessions</h2>
+            <p className="mt-4 text-lg text-gray-600">
+              Book a certified specialist to connect, diagnose, and resolve in a single sitting. Every session ends with a summary, preventive advice, and a seven day safety net for the same issue.
+            </p>
+            <ul className="mt-6 space-y-3">
+              {remoteHighlights.map((item) => (
+                <li key={item} className="flex items-start gap-3 text-gray-700">
+                  <CheckIcon className="mt-1 h-5 w-5 flex-none text-blue-600" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link
+                href="/book-service?type=remote"
+                className="inline-flex items-center justify-center rounded-full bg-blue-600 px-7 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+              >
+                Schedule a remote session
+              </Link>
+              <Link
+                href="/pricing#remote-support"
+                className="inline-flex items-center justify-center rounded-full border border-gray-300 px-7 py-3 text-sm font-semibold text-gray-700 hover:border-blue-300 hover:text-blue-600"
+              >
+                View remote pricing
+              </Link>
+            </div>
+          </div>
+          <div className="overflow-hidden rounded-2xl shadow-xl">
+            <Image
+              src="/images/remote-support.jpg"
+              alt="Technician guiding a client remotely"
+              width={640}
+              height={480}
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section id="ship-in-repairs" className="w-full bg-white py-20">
+        <div className="layout-container grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
+          <div className="relative order-2 lg:order-1">
+            <div className="overflow-hidden rounded-2xl shadow-xl">
+              <Image
+                src="/images/onsite-support.jpg"
+                alt="Laptop repair in progress"
+                width={640}
+                height={480}
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="absolute -bottom-6 left-6 rounded-2xl bg-white p-5 shadow-lg">
+              <p className="text-sm font-semibold text-gray-900">Included with every repair</p>
+              <p className="mt-2 text-xs text-gray-600">Photo documentation, diagnostic summary, secure packaging, insured shipping.</p>
+            </div>
+          </div>
+          <div className="order-1 lg:order-2">
+            <span className="text-sm font-semibold uppercase tracking-wide text-blue-600">Ship-in Repairs</span>
+            <h2 className="mt-4 text-3xl font-bold text-gray-900">Diagnostics first, approvals before parts, zero surprises</h2>
+            <p className="mt-4 text-lg text-gray-600">
+              From dead motherboards to thermal throttling, our repair lab treats every device with enterprise grade care. Expect proactive updates and a warranty you can trust.
+            </p>
+            <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+              {repairSteps.map((step) => (
+                <div key={step.title} className="rounded-2xl border border-gray-200 bg-gray-50 p-5 shadow-sm">
+                  <h3 className="text-base font-semibold text-gray-900">{step.title}</h3>
+                  <p className="mt-2 text-sm text-gray-600">{step.copy}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link
+                href="/book-service?type=repair"
+                className="inline-flex items-center justify-center rounded-full bg-blue-600 px-7 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+              >
+                Start a repair ticket
+              </Link>
+              <Link
+                href="/pricing#ship-in-repairs"
+                className="inline-flex items-center justify-center rounded-full border border-gray-300 px-7 py-3 text-sm font-semibold text-gray-700 hover:border-blue-300 hover:text-blue-600"
+              >
+                Review repair pricing
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="web-apps" className="w-full bg-gray-50 py-20">
+        <div className="layout-container grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
+          <div>
+            <span className="text-sm font-semibold uppercase tracking-wide text-blue-600">Small Business Web Apps</span>
+            <h2 className="mt-4 text-3xl font-bold text-gray-900">Fixed quote delivery for critical workflows</h2>
+            <p className="mt-4 text-lg text-gray-600">
+              We translate your operations into streamlined digital experiences. From bookings to billing, every module is scoped, prototyped, and reviewed with your stakeholders.
+            </p>
+            <ul className="mt-6 space-y-3">
+              {webAppHighlights.map((item) => (
+                <li key={item} className="flex items-start gap-3 text-gray-700">
+                  <CheckIcon className="mt-1 h-5 w-5 flex-none text-blue-600" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link
+                href="/services/web-apps#estimate"
+                className="inline-flex items-center justify-center rounded-full bg-blue-600 px-7 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+              >
+                Request a project estimate
+              </Link>
+              <Link
+                href="/pricing#web-apps"
+                className="inline-flex items-center justify-center rounded-full border border-gray-300 px-7 py-3 text-sm font-semibold text-gray-700 hover:border-blue-300 hover:text-blue-600"
+              >
+                View web app bundles
+              </Link>
+            </div>
+          </div>
+          <div className="overflow-hidden rounded-2xl shadow-xl">
+            <Image
+              src="/images/business-website.png"
+              alt="Responsive web application preview"
+              width={640}
+              height={480}
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section id="used-laptops" className="w-full bg-white py-20">
+        <div className="layout-container grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
+          <div className="relative order-2 lg:order-2">
+            <div className="overflow-hidden rounded-2xl shadow-xl">
+              <Image
+                src="/images/people-with-laptops-office.jpg"
+                alt="Team working on refurbished laptops"
+                width={640}
+                height={480}
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="absolute -bottom-6 right-6 rounded-2xl bg-white p-5 shadow-lg">
+              <p className="text-sm font-semibold text-gray-900">Grades and inclusions</p>
+              <p className="mt-2 text-xs text-gray-600">Grade A like new, Grade B light wear, Grade C value. Charger, warranty card, and stress test report included.</p>
+            </div>
+          </div>
+          <div className="order-1 lg:order-1">
+            <span className="text-sm font-semibold uppercase tracking-wide text-blue-600">Certified Used Laptops</span>
+            <h2 className="mt-4 text-3xl font-bold text-gray-900">Curated devices prepared for work, study, or field teams</h2>
+            <p className="mt-4 text-lg text-gray-600">
+              Share your workloads and we shortlist the right models, reserve them for inspection, and deliver ready to deploy with documentation and warranty.
+            </p>
+            <ul className="mt-6 space-y-3">
+              {laptopHighlights.map((item) => (
+                <li key={item} className="flex items-start gap-3 text-gray-700">
+                  <CheckIcon className="mt-1 h-5 w-5 flex-none text-blue-600" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link
+                href="/used-laptops"
+                className="inline-flex items-center justify-center rounded-full bg-blue-600 px-7 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+              >
+                View current stock
+              </Link>
+              <Link
+                href="/contact?topic=laptops"
+                className="inline-flex items-center justify-center rounded-full border border-gray-300 px-7 py-3 text-sm font-semibold text-gray-700 hover:border-blue-300 hover:text-blue-600"
+              >
+                Request sourcing support
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="w-full bg-gray-50 py-20">
+        <div className="layout-container grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900">Why teams trust QuickTech Pro</h2>
+            <p className="mt-4 text-lg text-gray-600">
+              Engage one partner for helpdesk, repair, development, and hardware. We document every interaction so your technology keeps pace with the business.
+            </p>
+            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
+              {valueProps.map(({ title, description, icon: Icon }) => (
+                <div key={title} className="rounded-2xl border border-white bg-white p-5 shadow-sm">
+                  <Icon className="h-8 w-8 text-blue-600" />
+                  <h3 className="mt-3 text-base font-semibold text-gray-900">{title}</h3>
+                  <p className="mt-2 text-sm text-gray-600">{description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-3xl border border-blue-200 bg-blue-50 p-8 text-gray-700">
+            <h3 className="text-xl font-semibold text-gray-900">Managed care plans</h3>
+            <p className="mt-3 text-sm">
+              Keep teams productive with monthly support bundles that include remote incidents, onsite visits, asset tracking, and quarterly strategy reviews.
+            </p>
+            <ul className="mt-4 space-y-2 text-sm">
+              <li className="flex items-start gap-2">
+                <CheckIcon className="mt-1 h-4 w-4 flex-none text-blue-600" />
+                <span>Essential Care from Rs. 4,999 per month</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckIcon className="mt-1 h-4 w-4 flex-none text-blue-600" />
+                <span>Growth Team for distributed teams up to ten members</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckIcon className="mt-1 h-4 w-4 flex-none text-blue-600" />
+                <span>Managed Desk with SLA backed response targets</span>
+              </li>
+            </ul>
+            <div className="mt-6 flex flex-wrap gap-4">
+              <Link
+                href="/pricing#care-plans"
+                className="inline-flex items-center justify-center rounded-full border border-blue-600 px-6 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50"
+              >
+                Compare care plans
+              </Link>
+              <Link
+                href="/contact?topic=care-plan"
+                className="inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+              >
+                Schedule a call
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="w-full bg-white py-20">
         <div className="layout-container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">Find answers to common questions about our services, pricing, and support options.</p>
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-bold text-gray-900">Clients say it best</h2>
+            <p className="mt-4 text-lg text-gray-600">Remote sessions, repairs, and product builds all come with the same focus on clarity, speed, and care.</p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
-            {/* FAQ Item 1 */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">What areas of Bangalore do you service?</h3>
-              <p className="text-gray-600">We provide IT support services throughout Bangalore, including Whitefield, Electronic City, Koramangala, HSR Layout, Indiranagar, and all surrounding areas. For remote support, we can assist clients anywhere.</p>
-            </div>
-            
-            {/* FAQ Item 2 */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Do you offer emergency IT support?</h3>
-              <p className="text-gray-600">Yes, we offer 24/7 emergency IT support for critical situations. Our team aims to respond within 30 minutes for remote support and can provide same-day onsite visits for urgent issues.</p>
-            </div>
-            
-            {/* FAQ Item 3 */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">What are your service rates?</h3>
-              <p className="text-gray-600">Our service rates depend on the type of support required. Remote support starts at ₹999, while onsite visits begin at ₹1,499. We provide clear, upfront pricing before starting any work and offer package deals for regular maintenance.</p>
-            </div>
-            
-            {/* FAQ Item 4 */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Do you provide support for both Windows and Mac?</h3>
-              <p className="text-gray-600">Yes, our technicians are certified to support both Windows and Mac systems, as well as various Linux distributions. We also support mobile devices, servers, and network equipment from all major manufacturers.</p>
-            </div>
-            
-            {/* FAQ Item 5 */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Can you help with website development?</h3>
-              <p className="text-gray-600">Absolutely! We offer comprehensive web development services including responsive website design, e-commerce solutions, content management systems, and ongoing maintenance and support.</p>
-            </div>
-            
-            {/* FAQ Item 6 */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Do you offer service contracts for businesses?</h3>
-              <p className="text-gray-600">Yes, we provide flexible IT service contracts for businesses of all sizes. Our managed service plans include regular maintenance, priority support, security monitoring, and proactive issue resolution at a predictable monthly cost.</p>
-            </div>
-          </div>
-          
-          <div className="mt-10 text-center">
-            <Link href="/faq" className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md text-blue-600 border border-blue-600 hover:bg-blue-50 transition-colors">
-              View All FAQs
-            </Link>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {testimonials.map(({ quote, name, role }) => (
+              <div key={name} className="rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
+                <p className="text-sm text-gray-700">{quote}</p>
+                <p className="mt-6 text-base font-semibold text-gray-900">{name}</p>
+                <p className="text-sm text-gray-500">{role}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section - Based on reference */}
+      <section className="w-full bg-gray-50 py-20">
+        <div className="layout-container grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-start">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900">Questions before you book?</h2>
+            <p className="mt-4 text-lg text-gray-600">
+              We are happy to prepare a personalised plan that spells out scope, timelines, and billing cadence. Start with a short discovery call or send a quick brief.
+            </p>
+            <div className="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-6 text-sm text-gray-700">
+              <p className="font-semibold text-gray-900">Need something custom?</p>
+              <p className="mt-2">Book a fifteen minute discovery call and receive a tailored quote within one business day.</p>
+            </div>
+          </div>
+          <div className="space-y-6">
+            {faqs.map(({ question, answer }) => (
+              <div key={question} className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900">{question}</h3>
+                <p className="mt-3 text-sm text-gray-700">{answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="w-full bg-blue-600 py-16 text-white">
-        <div className="layout-container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div>
-              <h2 className="text-3xl font-bold mb-4">Ready to Solve Your IT Challenges?</h2>
-              <p className="text-xl opacity-90 mb-8">Contact us today for expert IT support and web development services. Our team is ready to help you with fast, reliable solutions tailored to your needs.</p>
-              <div className="flex flex-wrap gap-4">
-                <Link href="/book-service" className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md bg-white text-blue-600 hover:bg-gray-100 transition-colors">
-                  Book a Service
-                </Link>
-                <Link href="/contact" className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md border-2 border-white text-white hover:bg-blue-700 transition-colors">
-                  Contact Us
-                </Link>
-              </div>
+        <div className="layout-container grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
+          <div>
+            <h2 className="text-3xl font-bold">Ready to get your technology humming?</h2>
+            <p className="mt-4 text-lg text-blue-100">
+              Share your challenges or upcoming projects and we will confirm pricing, availability, and next steps within the business day.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link
+                href="/book-service"
+                className="inline-flex items-center justify-center rounded-full bg-white px-7 py-3 text-base font-semibold text-blue-600 hover:bg-gray-100"
+              >
+                Book a service
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-full border-2 border-white px-7 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700"
+              >
+                Talk to our team
+              </Link>
             </div>
-            
-            <div className="hidden lg:block">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-blue-500 p-6 rounded-lg text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  <p className="font-medium">Phone Support</p>
-                  <p className="text-sm opacity-80">+91 80-4123-7890</p>
-                </div>
-                
-                <div className="bg-blue-500 p-6 rounded-lg text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  <p className="font-medium">Email Support</p>
-                  <p className="text-sm opacity-80">support@quicktechpro.com</p>
-                </div>
-                
-                <div className="bg-blue-500 p-6 rounded-lg text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <p className="font-medium">Business Hours</p>
-                  <p className="text-sm opacity-80">Mon-Sat: 9AM-8PM</p>
-                </div>
-                
-                <div className="bg-blue-500 p-6 rounded-lg text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <p className="font-medium">Location</p>
-                  <p className="text-sm opacity-80">Whitefield, Bangalore</p>
-                </div>
-              </div>
-            </div>
+          </div>
+          <div className="rounded-3xl border border-blue-400 bg-blue-500/60 p-8 text-blue-50">
+            <h3 className="text-xl font-semibold text-white">When you reach out</h3>
+            <ul className="mt-5 space-y-4">
+              <li className="flex gap-3">
+                <CheckIcon className="h-5 w-5 flex-none text-white" />
+                <span>Receive a same day response with timelines and next steps.</span>
+              </li>
+              <li className="flex gap-3">
+                <CheckIcon className="h-5 w-5 flex-none text-white" />
+                <span>Get digital paperwork, GST invoice, and secure payment links.</span>
+              </li>
+              <li className="flex gap-3">
+                <CheckIcon className="h-5 w-5 flex-none text-white" />
+                <span>Work with one coordinator through delivery and aftercare.</span>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
     </main>
   );
 }
-
-
-
-
 

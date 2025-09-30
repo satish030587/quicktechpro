@@ -1,385 +1,701 @@
 import Link from "next/link";
 import Image from "next/image";
-import { CheckIcon, ShieldCheckIcon, ComputerIcon, BriefcaseIcon, GlobeIcon } from "../components/Icons";
+import {
+  BriefcaseIcon,
+  CheckIcon,
+  ComputerIcon,
+  GlobeIcon,
+  ShieldCheckIcon,
+} from "../components/Icons";
+
+const navCards = [
+  {
+    id: "remote-support",
+    title: "Remote Tech Support",
+    description: "Secure fixes without downtime",
+    price: "Rs. 1,499 per session",
+    icon: ComputerIcon,
+  },
+  {
+    id: "ship-in-repairs",
+    title: "Ship-in Laptop & PC Repairs",
+    description: "Diagnostics-first lab service",
+    price: "Labour from Rs. 2,499",
+    icon: BriefcaseIcon,
+  },
+  {
+    id: "web-apps",
+    title: "Small Business Web Apps",
+    description: "Fixed-quote project delivery",
+    price: "Projects from Rs. 45,000",
+    icon: GlobeIcon,
+  },
+  {
+    id: "used-laptops",
+    title: "Quality Used Laptops",
+    description: "Certified, warranty-backed devices",
+    price: "Inventory from Rs. 18,500",
+    icon: ShieldCheckIcon,
+  },
+];
+
+const heroBadges = [
+  "Transparent quotes before work begins",
+  "No fix, no fee on remote support",
+  "90-day repair warranty",
+  "GST invoices and digital reports",
+];
+
+const heroStats = [
+  { label: "Support Sessions", value: "1,200+" },
+  { label: "Average Response", value: "35 mins" },
+  { label: "Customer Rating", value: "4.9 / 5" },
+];
+
+const remoteSupportPackages = [
+  {
+    name: "Quick Fix Session",
+    price: "Rs. 1,499",
+    duration: "Up to 45 minutes",
+    description: "Perfect for single-issue fixes, printer problems, or performance tune-ups.",
+    includes: [
+      "Secure connection with certified technician",
+      "Troubleshooting for one core issue and preventive tips",
+      "7-day follow-up for the same issue",
+    ],
+    href: "/book-service?type=remote&package=quick-fix",
+  },
+  {
+    name: "Advanced Care Session",
+    price: "Rs. 1,899",
+    duration: "Up to 90 minutes",
+    description: "Ideal for multi-issue cleanups, malware removal, and OS optimisation.",
+    includes: [
+      "Malware scan and removal",
+      "Startup, registry, and browser optimisation",
+      "Security hardening checklist",
+    ],
+    href: "/book-service?type=remote&package=advanced-care",
+  },
+  {
+    name: "Business Priority Support",
+    price: "Rs. 2,699",
+    duration: "Priority queue scheduling",
+    description: "Designed for SMB teams needing rapid response and documentation.",
+    includes: [
+      "Immediate technician assignment",
+      "Multi-device support within the same session",
+      "Service summary and prevention notes",
+    ],
+    href: "/book-service?type=remote&package=business-priority",
+  },
+];
+
+const remoteAssurance = [
+  "Encrypted, one-time access with consent-based control",
+  "Session recording available on request",
+  "Pay only after the resolution is confirmed",
+];
+
+const repairPackages = [
+  {
+    name: "Diagnostic & Health Report",
+    price: "Free",
+    turnaround: "Findings within 24 hours",
+    description: "Comprehensive hardware and software check with a documented report.",
+    includes: [
+      "16-point diagnostic checklist",
+      "Thermal, storage, and battery evaluation",
+      "Repair quote with parts options",
+    ],
+  },
+  {
+    name: "Standard Repair",
+    price: "Labour from Rs. 2,499",
+    turnaround: "2-4 business days",
+    description: "Covers storage upgrades, OS rebuilds, component swaps, and hinge fixes.",
+    includes: [
+      "OEM or Grade-A parts only",
+      "ESD-safe bench handling",
+      "90-day labour warranty",
+    ],
+  },
+  {
+    name: "Advanced Board-Level Repair",
+    price: "Labour from Rs. 4,999",
+    turnaround: "4-7 business days",
+    description: "Board rework, liquid damage treatment, and complex diagnostics.",
+    includes: [
+      "Microsoldering and board-level inspection",
+      "Ultrasonic cleaning and corrosion control",
+      "Stress testing before dispatch",
+    ],
+  },
+];
+
+const repairAddOns = [
+  "Pickup and delivery within Bangalore: Rs. 499 each way",
+  "Priority 48-hour turnaround add-on: Rs. 1,200",
+  "Data backup and migration: Rs. 1,099 (up to 256 GB)",
+];
+
+const carePlans = [
+  {
+    name: "Essential Care",
+    price: "Rs. 4,999 / month",
+    bestFor: "Home offices and freelancers",
+    items: [
+      "2 remote sessions each month",
+      "Endpoint security monitoring",
+      "Quarterly health reports",
+    ],
+  },
+  {
+    name: "Growth Team",
+    price: "Rs. 9,999 / month",
+    bestFor: "Teams up to 10 members",
+    items: [
+      "Unlimited remote incident support",
+      "Monthly onsite visit",
+      "Asset and license tracking",
+    ],
+  },
+  {
+    name: "Managed Desk",
+    price: "Rs. 17,999 / month",
+    bestFor: "Multi-location SMBs",
+    items: [
+      "Dedicated account manager",
+      "SLA-backed resolution targets",
+      "Proactive maintenance playbooks",
+    ],
+  },
+];
+
+const webBundles = [
+  {
+    name: "Launch Website",
+    price: "Rs. 45,000",
+    timeline: "3-4 weeks",
+    image: "/images/business-website.png",
+    description: "For service businesses that need a polished, lead-ready site.",
+    includes: [
+      "Up to 6 custom-designed pages",
+      "CMS for easy edits",
+      "Contact forms and lead routing",
+    ],
+  },
+  {
+    name: "Commerce Suite",
+    price: "Rs. 85,000",
+    timeline: "5-6 weeks",
+    image: "/images/ecommerce-store.png",
+    description: "Full-featured commerce deployment with secure payments.",
+    includes: [
+      "Product catalogue and inventory rules",
+      "Payment gateway integration",
+      "Order tracking dashboard",
+    ],
+  },
+  {
+    name: "Operations Portal",
+    price: "Rs. 135,000+",
+    timeline: "6-10 weeks",
+    image: "/images/web-application.png",
+    description: "Workflow automation for bookings, inventory, or customer portals.",
+    includes: [
+      "Discovery workshops and UX wireframes",
+      "Role-based access and reporting",
+      "Handover, training, and 30-day optimisation",
+    ],
+  },
+];
+
+const laptopBands = [
+  {
+    name: "Business Essentials",
+    range: "Rs. 18,500 - 28,500",
+    idealFor: "Students, remote workers, SME staff",
+    points: [
+      "Intel Core i5 / Ryzen 5, 8 GB RAM, 256 GB SSD",
+      "Grade A/B cosmetics with fresh OS install",
+      "90-day carry-in warranty",
+    ],
+  },
+  {
+    name: "Performance Plus",
+    range: "Rs. 29,000 - 42,000",
+    idealFor: "Designers, engineers, analytics teams",
+    points: [
+      "Intel Core i7 / Ryzen 7, 16 GB RAM, SSD + upgrades",
+      "Pro calibration and stress testing",
+      "Extended warranty options up to 6 months",
+    ],
+  },
+  {
+    name: "Ultrabook & 2-in-1",
+    range: "Rs. 38,000 - 55,000",
+    idealFor: "Executives and frequent travellers",
+    points: [
+      "Premium lightweight chassis with touch or convertible displays",
+      "Battery health above 85% guaranteed",
+      "Travel-ready accessories kit",
+    ],
+  },
+];
+
+const faqs = [
+  {
+    question: "Do prices include GST?",
+    answer:
+      "Yes. All pricing listed is inclusive of GST. Invoices are issued digitally alongside service summaries.",
+  },
+  {
+    question: "What happens if my issue is not fixed?",
+    answer:
+      "Remote sessions operate on a no fix, no fee basis. For repairs, you only pay once you approve the quote and the device passes quality checks.",
+  },
+  {
+    question: "How are web projects billed?",
+    answer:
+      "Projects follow a milestone-based schedule: 40% to initiate, 40% on staging approval, and 20% on launch. Retainer options are available for ongoing iterations.",
+  },
+  {
+    question: "Can I reserve a specific laptop model?",
+    answer:
+      "Yes. Share the configuration you need and we will source, certify, and hold the unit with a small refundable deposit.",
+  },
+];
 
 export default function PricingPage() {
   return (
     <>
-      {/* Hero Section - Styled like services page */}
       <section className="w-full bg-white py-16 md:py-20">
         <div className="layout-container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">Transparent, Honest Pricing</h1>
-              <p className="text-lg text-gray-600 mb-8">No hidden fees, no surprises. Our straightforward pricing ensures you know exactly what you'll pay before we start working on your technology needs.</p>
-              
-              <div className="flex flex-wrap gap-4 mb-8">
-                <Link className="px-6 py-3 bg-blue-600 rounded-md text-white font-medium hover:bg-blue-700 transition-colors" href="/book-service">Book a Service</Link>
-                <Link className="px-6 py-3 border border-blue-600 text-blue-600 rounded-md font-medium hover:bg-blue-50 transition-colors flex items-center" href="/contact">
-                  Get a Custom Quote
+              <span className="inline-flex items-center rounded-full bg-blue-50 px-4 py-1 text-sm font-semibold uppercase tracking-wide text-blue-700">
+                Pricing
+              </span>
+              <h1 className="mt-5 text-4xl font-bold leading-tight text-gray-900 md:text-5xl">
+                Predictable Pricing, Real Results
+              </h1>
+              <p className="mt-6 text-lg text-gray-600">
+                QuickTech Pro keeps technology budgets clear. From remote sessions to managed care plans and custom web apps, every engagement is scoped upfront with transparent deliverables and timelines.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Link
+                  href="/book-service"
+                  className="inline-flex items-center justify-center rounded-full bg-blue-600 px-8 py-3 text-base font-semibold text-white shadow-lg transition-colors hover:bg-blue-700"
+                >
+                  Book a Service
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center rounded-full border border-blue-600 px-8 py-3 text-base font-semibold text-blue-600 transition-colors hover:bg-blue-50"
+                >
+                  Request a Custom Quote
                 </Link>
               </div>
-              
-              <div className="flex flex-wrap gap-3">
-                {['Upfront Pricing','7-Day Guarantee','Money-Back Promise'].map(t => (
-                  <span key={t} className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-medium inline-flex items-center gap-2">
-                    <ShieldCheckIcon className="h-4 w-4 text-blue-600"/>{t}
+              <div className="mt-8 flex flex-wrap gap-3">
+                {heroBadges.map((badge) => (
+                  <span
+                    key={badge}
+                    className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700"
+                  >
+                    <ShieldCheckIcon className="h-4 w-4 text-blue-600" />
+                    {badge}
                   </span>
                 ))}
               </div>
+              <dl className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-3">
+                {heroStats.map(({ label, value }) => (
+                  <div key={label} className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center">
+                    <dt className="text-sm uppercase tracking-wide text-gray-500">{label}</dt>
+                    <dd className="mt-1 text-2xl font-bold text-gray-900">{value}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
-            <div className="hidden lg:block relative">
-              <div className="rounded-lg overflow-hidden shadow-xl">
-                <Image 
-                  src="/images/services-hero.png" 
-                  alt="IT services pricing" 
-                  width={600}
-                  height={400}
-                  className="w-full h-auto object-cover"
+            <div className="relative hidden lg:block">
+              <div className="overflow-hidden rounded-xl shadow-2xl">
+                <Image
+                  src="/images/services-hero.jpg"
+                  alt="Technicians planning IT service pricing"
+                  width={640}
+                  height={480}
+                  className="h-full w-full object-cover"
                   priority
                 />
               </div>
-              <div className="absolute -bottom-4 -right-4 bg-yellow-400 rounded-full w-20 h-20 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="font-bold">Best</div>
-                  <div className="text-xs">Value</div>
-                </div>
+              <div className="absolute -bottom-8 -right-6 flex w-36 flex-col items-center rounded-2xl bg-blue-600 p-4 text-white shadow-xl">
+                <span className="text-sm uppercase tracking-wide text-blue-100">Average turnaround</span>
+                <span className="text-3xl font-bold">24 h</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Service Navigation - Enhanced styling */}
-      <section className="w-full bg-gray-50 py-8 border-t border-b border-gray-200">
+      <section className="w-full border-y border-gray-200 bg-gray-50 py-12">
         <div className="layout-container">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Our Pricing</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Link 
-              href="#remote-support" 
-              className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow"
-            >
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-4">
-                <ComputerIcon className="h-8 w-8" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Remote Support</h3>
-              <p className="text-gray-600 text-center mb-2">Fix issues from anywhere</p>
-              <p className="font-semibold text-blue-600">{'\u20B9'}1,499+</p>
-            </Link>
-
-            <Link 
-              href="#onsite-support" 
-              className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow"
-            >
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-4">
-                <BriefcaseIcon className="h-8 w-8" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Onsite Service</h3>
-              <p className="text-gray-600 text-center mb-2">In-person technical support</p>
-              <p className="font-semibold text-blue-600">{'\u20B9'}1,200+</p>
-            </Link>
-
-            <Link 
-              href="#web-development" 
-              className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow"
-            >
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-4">
-                <GlobeIcon className="h-8 w-8" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Web Development</h3>
-              <p className="text-gray-600 text-center mb-2">Professional websites & apps</p>
-              <p className="font-semibold text-blue-600">Custom Quote</p>
-            </Link>
-          </div>
-        </div>
-      </section>
-      
-      {/* Remote Support Pricing */}
-      <section id="remote-support" className="w-full bg-white py-16">
-        <div className="layout-container">
-          <div className="flex items-start gap-3 mb-10">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-blue-100 text-blue-600 flex-shrink-0">
-              <ComputerIcon className="h-8 w-8" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Remote Computer Support</h2>
-              <p className="text-gray-600">Get your computer fixed from anywhere in India with secure remote access. Our technicians can diagnose and resolve most software issues without requiring an in-person visit.</p>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                name:'Quick Fix', 
-                price:'\u20B9' + '1,499', 
-                desc:'Perfect for simple issues', 
-                items:['Up to 1 hour remote session','Basic virus/malware removal','Simple software installation','Performance tune-up','Email & browser setup','7-day guarantee']
-              },
-              {
-                name:'Complete Solution', 
-                price:'\u20B9' + '1,999', 
-                desc:'For complex problems', 
-                featured:true, 
-                items:['Up to 2 hours remote session','Deep malware scanning & removal','Registry optimization','Multiple software installs','System backup setup','Network troubleshooting','Follow-up support call']
-              },
-              {
-                name:'Emergency Support', 
-                price:'\u20B9' + '2,999', 
-                desc:'Urgent same-day service', 
-                items:['Priority support within 2 hours','Weekend & holiday availability','Extended 3-hour session limit','Direct technician phone line']
-              },
-            ].map(card => (
-              <div key={card.name} className={`relative rounded-xl border ${card.featured ? 'border-blue-600' : 'border-gray-200'} bg-white p-6 shadow-md hover:shadow-lg transition-shadow flex flex-col h-full`}>
-                {card.featured && <div className="absolute -top-3 right-5 rounded-full bg-blue-600 px-4 py-1 text-xs font-semibold text-white">Most Popular</div>}
-                
-                <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">{card.name}</h3>
-                  <div className="text-3xl font-bold text-blue-600 mb-1">{card.price}</div>
-                  <p className="text-gray-600">{card.desc}</p>
-                </div>
-                
-                <div className="flex-grow mb-6">
-                  <ul className="space-y-3">
-                    {card.items.map(i => (
-                      <li key={i} className="flex items-start">
-                        <CheckIcon className="h-5 w-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0"/>
-                        <span className="text-gray-700">{i}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div className="mt-auto">
-                  <Link 
-                    className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors w-full" 
-                    href={`/book-service?type=remote&package=${encodeURIComponent(card.name.toLowerCase().replace(/\s+/g,'-'))}`}
-                  >
-                    Choose {card.name}
-                  </Link>
-                </div>
-              </div>
+          <h2 className="text-2xl font-bold text-gray-900">Browse pricing by service</h2>
+          <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {navCards.map(({ id, title, description, price, icon: Icon }) => (
+              <Link
+                key={id}
+                href={`#${id}`}
+                className="flex flex-col items-start rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-lg"
+              >
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                  <Icon className="h-6 w-6" />
+                </span>
+                <h3 className="mt-4 text-xl font-semibold text-gray-900">{title}</h3>
+                <p className="mt-2 text-sm text-gray-600">{description}</p>
+                <span className="mt-4 text-sm font-semibold text-blue-600">{price}</span>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Onsite Support - Enhanced styling with fixed alignment */}
-      <section id="onsite-support" className="w-full bg-gray-50 py-16">
+      <section id="remote-support" className="w-full bg-white py-20">
         <div className="layout-container">
-          {/* Section Title with Icon */}
-          <div className="flex items-start gap-3 mb-10 max-w-3xl mx-auto">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-blue-100 text-blue-600 flex-shrink-0">
-              <BriefcaseIcon className="h-8 w-8" />
-            </div>
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Onsite Support (Bangalore)</h2>
-              <p className="text-gray-600">Professional technician visits your location for hardware and complex issues that can't be resolved remotely. We cover all areas within Bangalore.</p>
+              <span className="text-sm font-semibold uppercase tracking-wide text-blue-600">Remote Tech Support Pricing</span>
+              <h2 className="mt-4 text-3xl font-bold text-gray-900">Resolve issues in a single secure session</h2>
+              <p className="mt-4 text-lg text-gray-600">
+                Every remote visit includes a documented checklist, preventive recommendations, and billing only after your approval.
+              </p>
+              <ul className="mt-6 space-y-3">
+                {remoteAssurance.map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-gray-700">
+                    <CheckIcon className="mt-1 h-5 w-5 flex-none text-blue-600" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* First Card - Consultation & Diagnosis */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-md h-full flex flex-col">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Consultation & Diagnosis</h3>
-              <div className="mb-4">
-                <p className="text-3xl font-bold text-blue-600 mb-2">{'\u20B9'}1,200</p>
-                <p className="text-gray-700">Covers technician visit, complete diagnosis, and basic configuration.</p>
-              </div>
-              
-              <div className="bg-gray-50 rounded-lg p-4 mb-6 flex-grow">
-                <h4 className="font-medium text-gray-900 mb-2">What's Included:</h4>
-                <ul className="space-y-2">
-                  {["Professional technician visit","Hardware & software diagnosis","Detailed problem report","Repair cost estimate","Basic configuration","Up to 1 hour onsite"].map(i => (
-                    <li key={i} className="flex items-start">
-                      <CheckIcon className="h-5 w-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0"/>
-                      <span className="text-gray-700">{i}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div className="flex flex-wrap gap-3 mt-auto">
-                <Link className="inline-flex items-center justify-center px-5 py-2 text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors" href="/book-service?type=onsite">
-                  Schedule Onsite Visit
-                </Link>
-                <Link className="inline-flex items-center justify-center px-5 py-2 text-base font-medium rounded-md text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors" href="/contact">
-                  Ask Questions First
-                </Link>
-              </div>
-            </div>
-            
-            {/* Second Card - Additional Services */}
-            <div className="grid grid-cols-1 gap-6">
-              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-md">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Additional Services (If Needed)</h3>
-                
-                <div className="space-y-3">
-                  {[
-                    { name: "Extended labor", price: "₹800/hour" },
-                    { name: "Data recovery", price: "₹1,500 - ₹5,000" },
-                    { name: "Network setup", price: "₹2,500 - ₹4,500" },
-                    { name: "Hardware installation", price: "₹500 - ₹1,500" }
-                  ].map((service, idx) => (
-                    <div key={idx} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center">
-                        <CheckIcon className="h-5 w-5 text-blue-600 mr-2 flex-shrink-0"/>
-                        <span className="text-gray-700">{service.name}</span>
-                      </div>
-                      <span className="font-medium text-gray-900">{service.price}</span>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="mt-4 p-4 rounded-lg bg-blue-50 border border-blue-100">
-                  <p className="text-gray-700">All additional work approved by you before proceeding. Parts charged separately at cost with no markup.</p>
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-md">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Service Areas</h3>
-                <p className="text-gray-700 mb-3">We provide onsite service throughout Bangalore including Whitefield, Electronic City, Koramangala, HSR Layout, Indiranagar, and surrounding areas.</p>
-                <p className="text-gray-700">
-                  <span className="font-semibold">Response time:</span> Same day for emergencies, or schedule at your convenience.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Web Development - Enhanced styling */}
-      <section id="web-development" className="w-full bg-white py-16">
-        <div className="layout-container">
-          <div className="flex items-center justify-center gap-3 mb-10">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-blue-100 text-blue-600">
-              <GlobeIcon className="h-8 w-8" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900">Web Development for Small Business</h2>
-            </div>
-          </div>
-          
-          <p className="text-lg text-gray-600 text-center max-w-3xl mx-auto mb-10">Professional websites and web applications to grow your business online. Our transparent pricing ensures you know exactly what you're getting for your investment.</p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                name: 'Business Website',
-                image: '/images/business-website.png',
-                from: 'Starting from',
-                price: '₹25,000',
-                items: ['5–10 pages','Responsive design','SEO optimization','Contact forms & Maps','1 year hosting','3 months support']
-              },
-              {
-                name: 'E-commerce Store',
-                image: '/images/ecommerce-store.png',
-                from: 'Starting from',
-                price: '₹45,000',
-                items: ['Product catalog','Secure payments','Order management','Mobile friendly','SEO setup','Training included']
-              },
-              {
-                name: 'Custom Web App',
-                image: '/images/web-application.png',
-                from: 'Starting from',
-                price: '₹95,000',
-                items: ['Tailored features','Auth & roles','API integrations','Scalable architecture','Analytics','Documentation']
-              }
-            ].map((pkg, idx) => (
-              <div key={pkg.name} className="bg-white rounded-xl border border-gray-200 shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="h-48 overflow-hidden">
-                  <Image 
-                    src={pkg.image}
-                    alt={pkg.name} 
-                    width={400}
-                    height={225}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">{pkg.name}</h3>
-                  <div className="text-gray-600 text-sm mb-1">{pkg.from}</div>
-                  <div className="text-2xl font-bold text-blue-600 mb-4">{pkg.price}</div>
-                  
-                  <ul className="mb-6 space-y-2">
-                    {pkg.items.map((feature, i) => (
-                      <li key={i} className="flex items-start">
-                        <CheckIcon className="h-5 w-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0"/>
-                        <span className="text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <div className="flex items-center justify-between">
-                    <Link 
-                      className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors w-full" 
-                      href={`/contact?service=${encodeURIComponent(pkg.name.toLowerCase().replace(/\s+/g,'-'))}`}
-                    >
-                      Get Custom Quote
-                    </Link>
+            <div className="lg:col-span-2 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {remoteSupportPackages.map(({ name, price, duration, description, includes, href }) => (
+                <article
+                  key={name}
+                  className="flex h-full flex-col rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm transition-shadow hover:shadow-lg"
+                >
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900">{name}</h3>
+                    <p className="mt-2 text-3xl font-bold text-blue-600">{price}</p>
+                    <p className="text-sm text-gray-500">{duration}</p>
+                    <p className="mt-3 text-sm text-gray-700">{description}</p>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <div className="mt-12 bg-gray-50 rounded-xl p-6 border border-gray-200 max-w-3xl mx-auto">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">Every Web Project Includes</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                "Detailed project proposal",
-                "Transparent milestone pricing",
-                "Regular progress updates",
-                "Quality assurance testing",
-                "Content management system",
-                "Mobile responsive design",
-                "Performance optimization",
-                "Training session for your team"
-              ].map(benefit => (
-                <div key={benefit} className="flex items-start">
-                  <CheckIcon className="h-5 w-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0"/>
-                  <span className="text-gray-700">{benefit}</span>
-                </div>
+                  <ul className="mt-4 flex-1 space-y-2">
+                    {includes.map((feature) => (
+                      <li key={feature} className="flex items-start gap-2 text-sm text-gray-700">
+                        <CheckIcon className="mt-1 h-4 w-4 flex-none text-blue-500" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href={href}
+                    className="mt-6 inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+                  >
+                    Book this session
+                  </Link>
+                </article>
               ))}
             </div>
           </div>
         </div>
       </section>
-      
-      {/* CTA Section */}
-      <section className="w-full bg-blue-600 py-16 text-white">
+
+      <section id="ship-in-repairs" className="w-full bg-gray-50 py-20">
         <div className="layout-container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
+            <div className="relative">
+              <div className="overflow-hidden rounded-2xl shadow-xl">
+                <Image
+                  src="/images/onsite-support.jpg"
+                  alt="Technician performing a laptop repair"
+                  width={640}
+                  height={480}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-6 left-6 rounded-2xl bg-white p-5 shadow-lg">
+                <p className="text-sm font-semibold text-gray-900">Included with every repair</p>
+                <p className="mt-2 text-xs text-gray-600">Diagnostic report, photo documentation, secure packaging for return shipping.</p>
+              </div>
+            </div>
             <div>
-              <h2 className="text-3xl font-bold mb-4">Need Help Choosing?</h2>
-              <p className="text-xl opacity-90 mb-8">Not sure which service is right for you? Contact us for a free consultation. We'll help you find the perfect solution at the right price for your needs.</p>
-              <div className="flex flex-wrap gap-4">
-                <Link href="/book-service" className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md bg-white text-blue-600 hover:bg-gray-100 transition-colors">
-                  Book a Service
+              <span className="text-sm font-semibold uppercase tracking-wide text-blue-600">Ship-in Repairs</span>
+              <h2 className="mt-4 text-3xl font-bold text-gray-900">Diagnostics-first repairs with clear approvals</h2>
+              <p className="mt-4 text-lg text-gray-600">
+                Send or drop off your device and approve the plan before we touch a screw. We only invoice once the repair is complete and stress tested.
+              </p>
+              <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
+                {repairPackages.map(({ name, price, turnaround, description, includes }) => (
+                  <article key={name} className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                    <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+                    <p className="mt-2 text-xl font-bold text-blue-600">{price}</p>
+                    <p className="text-xs uppercase tracking-wide text-gray-500">{turnaround}</p>
+                    <p className="mt-3 text-sm text-gray-700">{description}</p>
+                    <ul className="mt-4 space-y-2">
+                      {includes.map((item) => (
+                        <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
+                          <CheckIcon className="mt-1 h-4 w-4 flex-none text-blue-500" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                ))}
+              </div>
+              <div className="mt-6 rounded-2xl border border-dashed border-blue-300 bg-blue-50 p-5 text-sm text-gray-700">
+                <p className="font-semibold text-gray-900">Popular add-ons</p>
+                <ul className="mt-3 space-y-1">
+                  {repairAddOns.map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <CheckIcon className="mt-0.5 h-4 w-4 flex-none text-blue-500" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-4">
+                <Link
+                  href="/book-service?type=repair"
+                  className="inline-flex items-center justify-center rounded-full bg-blue-600 px-7 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+                >
+                  Start a repair ticket
                 </Link>
-                <Link href="/contact" className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md border-2 border-white text-white hover:bg-blue-700 transition-colors">
-                  Contact Us
+                <Link
+                  href="/services/ship-in-repairs"
+                  className="inline-flex items-center justify-center rounded-full border border-gray-300 px-7 py-3 text-sm font-semibold text-gray-700 hover:border-blue-300 hover:text-blue-600"
+                >
+                  View repair checklist
                 </Link>
               </div>
             </div>
-            
-            <div className="hidden lg:block">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-blue-500 p-6 rounded-lg text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                  <p className="font-medium">100% Satisfaction</p>
-                  <p className="text-sm opacity-80">Guaranteed or money back</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="care-plans" className="w-full bg-white py-20">
+        <div className="layout-container">
+          <div className="mb-12 text-center">
+            <span className="text-sm font-semibold uppercase tracking-wide text-blue-600">Managed Care Plans</span>
+            <h2 className="mt-4 text-3xl font-bold text-gray-900">Keep teams productive with predictable monthly support</h2>
+            <p className="mt-4 text-lg text-gray-600">
+              Choose a plan that matches your device count and coverage needs. All plans include onboarding, documentation, and a quarterly strategy review.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {carePlans.map(({ name, price, bestFor, items }) => (
+              <article key={name} className="flex h-full flex-col rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900">{name}</h3>
+                  <p className="mt-2 text-3xl font-bold text-blue-600">{price}</p>
+                  <p className="text-sm text-gray-500">{bestFor}</p>
                 </div>
-                
-                <div className="bg-blue-500 p-6 rounded-lg text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <p className="font-medium">24/7 Support</p>
-                  <p className="text-sm opacity-80">Available for emergencies</p>
-                </div>
+                <ul className="mt-4 flex-1 space-y-2">
+                  {items.map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
+                      <CheckIcon className="mt-1 h-4 w-4 flex-none text-blue-500" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/contact?topic=care-plan"
+                  className="mt-6 inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                >
+                  Schedule a pricing call
+                </Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="web-apps" className="w-full bg-gray-50 py-20">
+        <div className="layout-container">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:items-center">
+            <div>
+              <span className="text-sm font-semibold uppercase tracking-wide text-blue-600">Small Business Web Apps</span>
+              <h2 className="mt-4 text-3xl font-bold text-gray-900">Fixed-quote delivery with milestone billing</h2>
+              <p className="mt-4 text-lg text-gray-600">
+                We map requirements, lock scope, and deliver each milestone with demos and QA. Maintenance retainers are available once you launch.
+              </p>
+            </div>
+            <div className="lg:col-span-2 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {webBundles.map(({ name, price, timeline, image, description, includes }) => (
+                <article key={name} className="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                  <div className="h-40 overflow-hidden">
+                    <Image src={image} alt={name} width={400} height={200} className="h-full w-full object-cover" />
+                  </div>
+                  <div className="flex flex-1 flex-col p-6">
+                    <h3 className="text-xl font-semibold text-gray-900">{name}</h3>
+                    <p className="mt-2 text-3xl font-bold text-blue-600">{price}</p>
+                    <p className="text-sm text-gray-500">Timeline: {timeline}</p>
+                    <p className="mt-3 text-sm text-gray-700">{description}</p>
+                    <ul className="mt-4 flex-1 space-y-2">
+                      {includes.map((item) => (
+                        <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
+                          <CheckIcon className="mt-1 h-4 w-4 flex-none text-blue-500" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Link
+                      href="/services/web-apps#estimate"
+                      className="mt-6 inline-flex items-center justify-center rounded-full border border-blue-600 px-5 py-2 text-sm font-semibold text-blue-600 transition-colors hover:bg-blue-50"
+                    >
+                      Request full proposal
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+          <div className="mt-12 rounded-3xl border border-blue-200 bg-blue-50 p-8 text-center text-sm text-gray-700">
+            <p>
+              Need ongoing enhancements? Bundle post-launch sprints at a discounted hourly rate when booked within 60 days of go-live.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="used-laptops" className="w-full bg-white py-20">
+        <div className="layout-container">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
+            <div className="relative order-2 lg:order-1">
+              <div className="overflow-hidden rounded-2xl shadow-xl">
+                <Image
+                  src="/images/people-with-laptops-office.jpg"
+                  alt="Professionals using refurbished laptops"
+                  width={640}
+                  height={480}
+                  className="h-full w-full object-cover"
+                />
               </div>
+              <div className="absolute -bottom-6 right-6 rounded-2xl bg-white p-5 shadow-lg">
+                <p className="text-sm font-semibold text-gray-900">Each device includes</p>
+                <p className="mt-2 text-xs text-gray-600">Data sanitisation, stress test report, charger, and warranty card.</p>
+              </div>
+            </div>
+            <div className="order-1 lg:order-2">
+              <span className="text-sm font-semibold uppercase tracking-wide text-blue-600">Quality Used Laptops</span>
+              <h2 className="mt-4 text-3xl font-bold text-gray-900">Certified hardware with enterprise-grade refurbishment</h2>
+              <p className="mt-4 text-lg text-gray-600">
+                Stock changes weekly. Share your workload, and we will shortlist the best-matched devices within your budget and reserve them for inspection.
+              </p>
+              <div className="mt-8 grid grid-cols-1 gap-5">
+                {laptopBands.map(({ name, range, idealFor, points }) => (
+                  <article key={name} className="rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+                      <span className="text-sm font-semibold text-blue-600">{range}</span>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-500">{idealFor}</p>
+                    <ul className="mt-4 space-y-2">
+                      {points.map((item) => (
+                        <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
+                          <CheckIcon className="mt-1 h-4 w-4 flex-none text-blue-500" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                ))}
+              </div>
+              <div className="mt-6 flex flex-wrap gap-4">
+                <Link
+                  href="/used-laptops"
+                  className="inline-flex items-center justify-center rounded-full bg-blue-600 px-7 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+                >
+                  View current stock
+                </Link>
+                <Link
+                  href="/contact?topic=laptops"
+                  className="inline-flex items-center justify-center rounded-full border border-gray-300 px-7 py-3 text-sm font-semibold text-gray-700 hover:border-blue-300 hover:text-blue-600"
+                >
+                  Request sourcing support
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="w-full bg-gray-50 py-20">
+        <div className="layout-container">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-start">
+            <div>
+              <span className="text-sm font-semibold uppercase tracking-wide text-blue-600">Questions</span>
+              <h2 className="mt-4 text-3xl font-bold text-gray-900">Pricing and billing FAQ</h2>
+              <p className="mt-4 text-lg text-gray-600">
+                Still unsure about scope or budget? We are happy to prepare a detailed proposal that covers deliverables, milestones, and payment cadence.
+              </p>
+              <div className="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-6 text-sm text-gray-700">
+                <p className="font-semibold text-gray-900">Need something custom?</p>
+                <p className="mt-2">
+                  Book a 15-minute discovery call. We will map your requirements and send a tailored quote within one business day.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-6">
+              {faqs.map(({ question, answer }) => (
+                <article key={question} className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                  <h3 className="text-lg font-semibold text-gray-900">{question}</h3>
+                  <p className="mt-3 text-sm text-gray-700">{answer}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="w-full bg-blue-600 py-16 text-white">
+        <div className="layout-container">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
+            <div>
+              <h2 className="text-3xl font-bold">Ready to lock in your service slot?</h2>
+              <p className="mt-4 text-lg text-blue-100">
+                Share your challenge or project goals and we will confirm pricing, availability, and next steps within the business day.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Link
+                  href="/book-service"
+                  className="inline-flex items-center justify-center rounded-full bg-white px-7 py-3 text-base font-semibold text-blue-600 hover:bg-gray-100"
+                >
+                  Book a service
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center rounded-full border-2 border-white px-7 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700"
+                >
+                  Talk to sales
+                </Link>
+              </div>
+            </div>
+            <div className="rounded-3xl border border-blue-400 bg-blue-500/60 p-8 text-blue-50">
+              <h3 className="text-xl font-semibold text-white">When you reach out</h3>
+              <ul className="mt-5 space-y-4">
+                <li className="flex gap-3">
+                  <CheckIcon className="h-5 w-5 flex-none text-white" />
+                  <span>Get a same-day response with estimated timelines.</span>
+                </li>
+                <li className="flex gap-3">
+                  <CheckIcon className="h-5 w-5 flex-none text-white" />
+                  <span>Receive digital paperwork, GST invoice, and payment links.</span>
+                </li>
+                <li className="flex gap-3">
+                  <CheckIcon className="h-5 w-5 flex-none text-white" />
+                  <span>Work with one coordinator through completion.</span>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -387,5 +703,6 @@ export default function PricingPage() {
     </>
   );
 }
+
 
 

@@ -1,161 +1,211 @@
 import ContactForm from "./ContactForm";
+import Link from "next/link";
+import { CheckIcon, ChevronRightIcon, ClockIcon, PhoneIcon } from "../components/Icons";
 
-export const metadata = { title: "Contact Us | QuickTechPro" };
+const MAP_EMBED_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.167519941677!2d77.74876857502745!3d12.964664215115033!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae13c0fa4ec4e7%3A0x1f6d80cd2749e8c9!2sWhitefield%20Tech%20Park!5e0!3m2!1sen!2sin!4v1726934400000!5m2!1sen!2sin";
+
+export const metadata = { title: "Contact Us | QuickTech Pro" };
+
+const stats = [
+  { label: "Average first response", value: "35 minutes" },
+  { label: "Remote slots", value: "Same day" },
+  { label: "Repair diagnostics", value: "24 hours" },
+];
+
+const contactMethods = [
+  {
+    label: "Phone and WhatsApp",
+    value: "+91 80-4123-7890",
+    meta: "Mon-Sat, 10:00-19:00 IST",
+    icon: PhoneIcon,
+  },
+  {
+    label: "Email",
+    value: "support@quicktechpro.com",
+    meta: "Replies within one business day",
+    icon: MailIcon,
+  },
+  {
+    label: "Repair lab",
+    value: "Whitefield Tech Park, Tower B",
+    meta: "Drop-off by appointment only",
+    icon: LocationIcon,
+  },
+];
+
+const escalations = [
+  "Priority hardware outages",
+  "Cybersecurity incidents",
+  "Critical web app downtime",
+];
+
+const quickLinks = [
+  { href: "/pricing#remote-support", label: "Remote support pricing" },
+  { href: "/pricing#ship-in-repairs", label: "Ship-in repair pricing" },
+  { href: "/services/web-apps#estimate", label: "Web app project estimate" },
+  { href: "/used-laptops", label: "View certified used laptops" },
+  { href: "/pricing#care-plans", label: "Compare managed care plans" },
+];
+
+function MailIcon({ className = "h-6 w-6", ...props }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+      <path d="M22 6l-10 7L2 6" />
+    </svg>
+  );
+}
+
+function LocationIcon({ className = "h-6 w-6", ...props }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M12 22s-7-5.33-7-11a7 7 0 1 1 14 0c0 5.67-7 11-7 11z" />
+      <circle cx="12" cy="11" r="3" />
+    </svg>
+  );
+}
+
+function MapEmbed() {
+  return (
+    <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm">
+      <iframe
+        title="QuickTech Pro on Google Maps"
+        src={MAP_EMBED_URL}
+        className="h-[360px] w-full border-0"
+        loading="lazy"
+        allowFullScreen
+        referrerPolicy="no-referrer-when-downgrade"
+      />
+    </div>
+  );
+}
 
 export default function ContactPage() {
   return (
-    <>
-      {/* Hero Section */}
-      <section className="bg-white py-16 md:py-20">
-        <div className="layout-container">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Get in Touch</h1>
-            <p className="text-lg text-gray-600 mb-8">
-              Need technical support or have questions about our services? We are here to help.
-              Our team responds within 2 hours during business hours.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Content */}
-      <section className="bg-gray-50 py-16">
-        <div className="layout-container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            {/* Business Information */}
-            <div className="bg-white rounded-lg p-8 shadow-md border border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Business Information</h2>
-              
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-600 mr-4 flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">Phone & WhatsApp</h3>
-                    <p className="text-gray-600">+91-XXXXXXXXXX</p>
-                    <p className="text-gray-600">+91-XXXXXXXXXX (WhatsApp)</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-600 mr-4 flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">Email</h3>
-                    <p className="text-gray-600">support@quicktechpro.com</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-600 mr-4 flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">Business Hours</h3>
-                    <p className="text-gray-600">Monday – Saturday: 9 AM – 7 PM</p>
-                    <p className="text-gray-600">Sunday: Closed</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-600 mr-4 flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">Address</h3>
-                    <p className="text-gray-600">Bangalore, Karnataka</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mt-8 rounded-lg overflow-hidden">
-                <iframe 
-                  title="Map" 
-                  src="https://www.google.com/maps?q=Bangalore&output=embed" 
-                  className="w-full h-64 border-0" 
-                  loading="lazy" 
-                  allowFullScreen
-                />
-              </div>
-            </div>
-            
-            {/* Contact Form */}
-            <div className="bg-white rounded-lg p-8 shadow-md border border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Send a Message</h2>
-              <ContactForm />
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      {/* FAQ Section */}
-      <section className="w-full bg-white py-16">
-        <div className="layout-container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Have questions about our services? Find quick answers to common queries below.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {[
-              {
-                question: "How quickly can you respond to IT emergencies?",
-                answer: "For urgent issues, we aim to provide immediate remote assistance and can typically be on-site within 2-4 hours in Bangalore."
-              },
-              {
-                question: "Do you offer service contracts or pay-as-you-go options?",
-                answer: "Yes, we provide both flexible service contracts with regular maintenance and pay-as-you-need support options."
-              },
-              {
-                question: "What areas do you service for on-site support?",
-                answer: "We provide on-site support throughout Bangalore and surrounding areas. Remote support is available nationwide."
-              },
-              {
-                question: "Do you work with both individuals and businesses?",
-                answer: "Yes, we serve both individual clients and businesses of all sizes, from startups to established companies."
-              }
-            ].map((item, index) => (
-              <div key={index} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.question}</h3>
-                <p className="text-gray-600">{item.answer}</p>
+    <main>
+      <section className="w-full bg-white py-16 md:py-20">
+        <div className="layout-container text-center">
+          <span className="inline-flex items-center justify-center rounded-full bg-blue-50 px-4 py-1 text-sm font-semibold uppercase tracking-wide text-blue-700">
+            Contact
+          </span>
+          <h1 className="mt-5 text-4xl font-bold leading-tight text-gray-900 md:text-5xl">
+            We are ready to help
+          </h1>
+          <p className="mt-4 max-w-3xl text-lg text-gray-600 mx-auto">
+            Share your request and a QuickTech Pro coordinator will reply with next steps, transparent pricing, and the right specialist.
+          </p>
+          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {stats.map(({ label, value }) => (
+              <div key={label} className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+                <p className="text-xs uppercase tracking-wide text-gray-500">{label}</p>
+                <p className="mt-2 text-2xl font-semibold text-gray-900">{value}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
-      
-      {/* CTA Section */}
-      <section className="w-full bg-blue-600 py-12">
-        <div className="w-full text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Need urgent tech support?</h2>
-          <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
-            Don't wait! Call us now for immediate assistance with your computer issues or IT emergencies.
-          </p>
-          <div className="inline-flex items-center justify-center bg-white rounded-full px-6 py-3 text-blue-600 font-bold text-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-            </svg>
-            +91-XXXXXXXXXX
+
+      <section className="w-full bg-gray-50 py-16">
+        <div className="layout-container grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,2fr),minmax(0,3fr)]">
+          <div className="space-y-6">
+            <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+              <h2 className="text-xl font-semibold text-gray-900">Speak to a coordinator</h2>
+              <p className="mt-3 text-sm text-gray-600">
+                Prefer a quick call or message? Reach out on the channel that suits you and we will align the right technician or developer.
+              </p>
+              <ul className="mt-6 space-y-4">
+                {contactMethods.map(({ label, value, meta, icon: Icon }) => (
+                  <li key={label} className="flex items-start gap-4">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900 uppercase tracking-wide">{label}</p>
+                      <p className="text-base text-gray-800">{value}</p>
+                      <p className="text-sm text-gray-500">{meta}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-5 text-sm text-gray-700">
+                <p className="font-semibold text-gray-900">Need urgent assistance?</p>
+                <p className="mt-2">Mention your ticket number when calling or messaging so we can escalate immediately.</p>
+                <ul className="mt-3 space-y-1">
+                  {escalations.map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <CheckIcon className="mt-1 h-4 w-4 flex-none text-blue-600" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="mt-6 rounded-2xl border border-gray-200 bg-gray-50 p-5 text-sm">
+                <p className="text-sm font-semibold text-gray-900">Quick links</p>
+                <div className="mt-3 grid grid-cols-1 gap-2">
+                  {quickLinks.map(({ href, label }) => (
+                    <Link key={label} href={href} className="inline-flex items-center justify-between rounded-lg border border-transparent bg-white px-4 py-2 text-gray-700 shadow-sm transition hover:border-blue-200 hover:text-blue-600">
+                      <span>{label}</span>
+                      <ChevronRightIcon className="h-4 w-4" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+            <h2 className="text-xl font-semibold text-gray-900">Send us the details</h2>
+            <p className="mt-3 text-sm text-gray-600">
+              Tell us about your device, project, or support need. We respond within business hours with next steps and scheduling options.
+            </p>
+            <div className="mt-6">
+              <ContactForm />
+            </div>
           </div>
         </div>
       </section>
-    </>
+
+      <section className="w-full bg-white py-16">
+        <div className="layout-container grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,3fr),minmax(0,2fr)] lg:items-center">
+          <MapEmbed />
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold text-gray-900">Visit our repair lab</h2>
+            <p className="text-sm text-gray-600">
+              Book a drop-in slot or ship your device to our Whitefield facility. We operate an ESD-safe bench with diagnostics, board-level repair, and refurbishment stations.
+            </p>
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 text-sm text-gray-700">
+              <p className="text-xs uppercase tracking-wide text-gray-500">Address</p>
+              <p className="mt-2 text-gray-800">Whitefield Tech Park, Tower B</p>
+              <p className="text-gray-800">Bangalore, Karnataka 560066</p>
+              <p className="mt-3 text-xs text-gray-500">Drop-off by appointment only. Ship-in labels provided after diagnostic approval.</p>
+            </div>
+            <div className="inline-flex items-center gap-3 rounded-full border border-blue-600 px-5 py-2 text-sm font-semibold text-blue-600">
+              <PhoneIcon className="h-4 w-4" />
+              Call +91 80-4123-7890 to schedule a visit
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
-
-
-
-
